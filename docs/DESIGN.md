@@ -277,6 +277,8 @@ White background. HS KL logo top-left, "CREATIVE SCIENCE" in Stratos next to it,
 
 Black background, white logo variant, white text. Includes: short project description, list of participating groups, **Impressum**, **Datenschutz**, and the line "Ein Projekt im Studiengang Virtual Design, Hochschule Kaiserslautern."
 
+Partner logos (list: `src/lib/partners.ts`) sit in one row with the HS KL logo. A partner logo without a white variant keeps its own colors on a white tile (`.partner-tile`); never recolor it to fit the black background.
+
 ### 7.3 Links, buttons, and calls to action
 
 - **Text link:** black, 1 px underline, offset 0.2em. On hover, the underline becomes 3 px.

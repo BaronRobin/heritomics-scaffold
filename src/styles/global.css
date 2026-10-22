@@ -114,7 +114,10 @@ img.logo { aspect-ratio: auto; width: auto; }
 .footer { background: var(--color-black); color: var(--color-white); margin-top: var(--x-2); }
 .footer a { color: var(--color-white); }
 .footer-inner { padding-block: var(--x-2); display: flex; flex-wrap: wrap; gap: var(--x-2); justify-content: space-between; }
-.partners { list-style: none; margin: 0; padding: 0; flex-basis: 100%; display: flex; flex-wrap: wrap; gap: var(--x-half) var(--x); }
+.partners { list-style: none; margin: 0; padding: 0; flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: var(--x-half) var(--x); }
+.partners img { display: block; max-width: 100%; object-fit: contain; }
+/* Colored partner logos keep their colors on a white tile; only HS KL has a white variant (DESIGN.md 7.2) */
+.partner-tile { background: var(--color-white); padding: var(--space-2) var(--space-3); max-width: 100%; }
 .footer-text { max-width: 52ch; gap: var(--space-2); }
 .footer-legal { display: flex; flex-direction: column; font-size: var(--type-cta); font-weight: 700; }
 .footer-legal a { padding-block: var(--space-3); }

@@ -1,22 +1,22 @@
 ---
-// Site footer (DESIGN.md 7.2): partner logos (placeholders until the official files arrive),
-// project line, content credits and the legal links.
+// Site footer (DESIGN.md 7.2): partner logos (src/lib/partners.ts), project line, content credits and the legal links.
+// The logos sit at the bottom of every page, so they load lazily.
 import { t } from '../i18n/ui';
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
 import { path, asset, type Lang, type RouteKey } from '../i18n/routes';
+import { partners } from '../lib/partners';
 import ExternalLink from './ExternalLink.astro';
 
 interface Props { lang: Lang; routeKey: RouteKey; flush?: boolean }
 const { lang, routeKey, flush = false } = Astro.props;
-const whiteLogo = existsSync(join(process.cwd(), 'public/brand/hskl-logo-white.svg')) ? asset('brand/hskl-logo-white.svg') : undefined;
-const partners = [t(lang, 'logo.partner'), t(lang, 'logo.partner'), t(lang, 'logo.partner')];
 ---
 <footer class="footer" style={flush ? 'margin-top: 0' : undefined}>
   <div class="wrap footer-inner">
     <ul class="partners" aria-label={t(lang, 'footer.partners')}>
-      <li>{whiteLogo ? <img class="logo" src={whiteLogo} alt="Hochschule Kaiserslautern" /> : <span class="placeholder logo">{t(lang, 'logo.hsklWhite')}</span>}</li>
-      {partners.map((label) => <li><span class="placeholder logo">{label}</span></li>)}
+      {partners.map(({ name, lang: nameLang, logo, tile }) => (
+        <li class:list={[tile && 'partner-tile']}>
+          <img class="logo" src={asset(logo.file)} width={logo.width} height={logo.height} alt={name} lang={nameLang} loading="lazy" decoding="async" />
+        </li>
+      ))}
     </ul>
     <div class="stack footer-text">
       <p>{t(lang, 'footer.project')}</p>
