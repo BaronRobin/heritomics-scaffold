@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="de" data-fonts="fallback">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leben aus Nebel – Creative Science (Mockup)</title>
+<!-- Mockup only: Google Fonts for convenience. The real site self-hosts all fonts (see PRIVACY rules in the prompt). -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../src/styles/tokens.css">
+<link rel="stylesheet" href="mockup.css">
+</head>
+<body>
+
+<header class="wrap nav">
+  <div class="brand">
+    <div class="logo-ph">HS KL Logo<br>(offizielle Datei)</div>
+    <a class="d brand-name" href="index.html">Creative Science</a>
+  </div>
+  <nav class="navlinks" aria-label="Hauptnavigation">
+    <a href="index.html#erlebnisse" aria-current="page">Erlebnisse</a>
+    <a href="index.html#ueber">Über</a>
+    <span class="lang"><a href="#" style="text-decoration: underline; text-underline-offset: 0.2em">DE</a> | <a href="#">EN</a></span>
+  </nav>
+  <button class="menu-btn" id="menu-open" type="button" aria-expanded="false" aria-controls="menu">Menü</button>
+  <div class="menu" id="menu" role="dialog" aria-label="Menü" hidden>
+    <button class="menu-btn" id="menu-close" type="button">Schließen</button>
+    <nav aria-label="Hauptnavigation mobil">
+      <a href="index.html#erlebnisse">Erlebnisse</a>
+      <a href="index.html#ueber">Über</a>
+    </nav>
+    <div class="lang" style="font-size: 18px"><a href="#" style="text-decoration: underline">DE</a> | <a href="#">EN</a></div>
+  </div>
+</header>
+
+<div class="depth">
+  <nav class="wrap" aria-label="Ebenen">
+    <a href="#ueberblick" aria-current="true">Überblick</a>
+    <span aria-hidden="true">·</span>
+    <a href="#erleben">Erleben</a>
+    <span aria-hidden="true">·</span>
+    <a href="#vertiefen">Vertiefen</a>
+  </nav>
+</div>
+
+<main>
+  <!-- Level 1: Überblick -->
+  <section id="ueberblick" class="wrap" style="padding-top: var(--x); padding-bottom: var(--x-3)">
+    <div style="margin-bottom: var(--x)"><a class="cta" href="index.html"><span aria-hidden="true">←</span> Alle Erlebnisse</a></div>
+    <div class="overlap">
+      <div class="ph ph-duplex exp-hero-img" role="img" aria-label="Platzhalter Duplex-Bild">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="0" x2="100" y2="100" stroke="#fff" vector-effect="non-scaling-stroke"/><line x1="100" y1="0" x2="0" y2="100" stroke="#fff" vector-effect="non-scaling-stroke"/></svg>
+        <span>[Duplex-Bild: Nebel über der Küstenwüste, Weiß → Duplex-Blau]</span>
+      </div>
+      <div class="surface s-green exp-hero-surface" data-key-surface>
+        <div class="topline">Biokrusten · Atacama-Wüste · Beispielprojekt</div>
+        <h1 class="d t-h1">Leben aus Nebel.</h1>
+        <p class="t-lead" style="margin-top: var(--x-half)">An einem der trockensten Orte der Welt regnet es fast nie. Trotzdem wächst dort eine Kruste aus Flechten. Ihr Wasser kommt aus dem Nebel.</p>
+        <div class="meta-row t-small"><span><strong>Gruppe</strong> [Gruppenname]</span><span><strong>Format</strong> 3D-Modell</span><span><strong>Dauer</strong> 5 Min.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Level 2: Erleben (the Stage) -->
+  <section id="erleben" class="stage" aria-label="Erlebnis">
+    <div class="wrap stage-grid">
+      <div class="stage-media">
+        <div class="ph ph-dark stage-box" id="stage-poster" role="img" aria-label="Platzhalter Poster">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="0" x2="100" y2="100" stroke="#fff" vector-effect="non-scaling-stroke"/><line x1="100" y1="0" x2="0" y2="100" stroke="#fff" vector-effect="non-scaling-stroke"/></svg>
+          <span>[Poster: Standbild aus dem 3D-Modell]</span>
+        </div>
+        <div class="stage-box stage-running" id="stage-running" hidden>
+          <p style="max-width: 40ch">[Hier läuft das Erlebnis der Gruppe: 3D-Viewer, Video, VR-Start oder Canvas. Innerhalb dieser Fläche gestaltet jede Gruppe frei.]</p>
+          <button class="btn-o fs" type="button" aria-label="Vollbild">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="stage-info">
+        <div class="topline">3D-Modell · 5 Min.</div>
+        <h2 class="d t-h2">Erkunde die Kruste.</h2>
+        <p>Dreh, zoom und tauch ein: vom Wüstenboden bis zu den einzelnen Zellen.</p>
+        <div class="chips">
+          <span class="chip-o">Desktop empfohlen</span>
+          <span class="chip-o">Maus oder Touch</span>
+          <span class="chip-o">Ohne Ton</span>
+        </div>
+        <div class="stack" id="stage-start">
+          <button class="btn btn-y" id="stage-start-btn" type="button">Erlebnis starten <span aria-hidden="true">→</span></button>
+          <p class="t-small">Lädt erst nach dem Klick, ca. [24] MB. Keine externen Dienste.</p>
+        </div>
+        <button class="btn-o" id="stage-stop" type="button" hidden>Erlebnis beenden</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section-lg" aria-labelledby="frage">
+    <div class="two">
+      <div class="two-a stack">
+        <div class="topline">Die Frage</div>
+        <h2 id="frage" class="d d-u t-h2">Wie überlebt man ohne Regen?</h2>
+        <p style="max-width: 60ch">[Bis zu 80 Wörter in einfacher Sprache: welche Frage die Forschung stellt, warum sie wichtig ist und was man im Erlebnis entdecken kann. Jeder Fachbegriff wird beim ersten Auftreten kurz erklärt.]</p>
+      </div>
+      <figure class="two-b stack" style="gap: 10px">
+        <div class="ph ph-sci" style="aspect-ratio: 1 / 1" role="img" aria-label="Platzhalter Mikroskopie-Aufnahme">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="0" x2="100" y2="100" stroke="#000" vector-effect="non-scaling-stroke"/><line x1="100" y1="0" x2="0" y2="100" stroke="#000" vector-effect="non-scaling-stroke"/></svg>
+          <div class="scalebar"><i></i>[20 µm]</div>
+        </div>
+        <figcaption class="t-small">[Mikroskopie, unbearbeitet: Algenzellen in einer Flechte. Lichtmikroskop, Vergrößerung.] <span class="grey">Foto: [XCEL Lab, HS Kaiserslautern]</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Level 3: Vertiefen -->
+  <section id="vertiefen" style="border-top: var(--rule-width) solid var(--rule)" aria-labelledby="vert">
+    <div class="wrap section">
+      <h2 id="vert" class="d t-h2" style="margin-bottom: var(--x)">Vertiefen</h2>
+      <div class="two">
+        <div class="two-a stack" style="gap: var(--x)">
+          <div class="stack" style="gap: 8px">
+            <h3 class="t-h3">Methode</h3>
+            <p style="max-width: 60ch">[Wie die Daten entstanden sind: Probenahme, Messung, Mikroskopie, Scans.]</p>
+          </div>
+          <div class="stack" style="gap: 8px">
+            <h3 class="t-h3">Gestaltung</h3>
+            <p style="max-width: 60ch">[Wie die Gruppe aus der Forschung ein Erlebnis gemacht hat: Ideen, Prototypen, Entscheidungen.]</p>
+          </div>
+          <div>
+            <h3 class="t-h3" style="margin-bottom: 8px">Quellen</h3>
+            <div class="src"><span>[Fachartikel 1, Autor:innen, Jahr]</span><a class="cta" href="#">Lesen <span aria-hidden="true">↗</span></a></div>
+            <div class="src"><span>[Fachartikel 2, Autor:innen, Jahr]</span><a class="cta" href="#">Lesen <span aria-hidden="true">↗</span></a></div>
+            <div class="src"><span>[Blogbeitrag, selectedplants.de]</span><a class="cta" href="#">Lesen <span aria-hidden="true">↗</span></a></div>
+          </div>
+        </div>
+        <aside class="two-b" aria-label="Forschende">
+          <div class="ph" style="aspect-ratio: 4 / 5" role="img" aria-label="Platzhalter Porträt"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="0" x2="100" y2="100" stroke="#000" vector-effect="non-scaling-stroke"/><line x1="100" y1="0" x2="0" y2="100" stroke="#000" vector-effect="non-scaling-stroke"/></svg><span>[Porträt, natürliches Licht]</span></div>
+          <div class="surface s-green sci-card" data-key-surface>
+            <div class="topline">Forschung</div>
+            <div class="t-h3">Dr. Patrick Jung</div>
+            <p style="font-size: 16px; line-height: 1.45">XCEL – Extreme Cryptogam Ecology Lab, Hochschule Kaiserslautern</p>
+            <p style="font-weight: 500; font-size: 20px; line-height: 1.25">„[Zitat in seinen eigenen Worten]“</p>
+          </div>
+        </aside>
+      </div>
+      <div class="credits"><strong>Team</strong> [Namen der Gruppe] · <strong>Betreuung</strong> [Lehrende]</div>
+    </div>
+  </section>
+
+  <nav class="wrap pager" aria-label="Weitere Erlebnisse">
+    <a class="cta" href="#"><span aria-hidden="true">←</span> Im Dunkeln wachsen</a>
+    <a class="cta" href="#">Kälte als Zuhause <span aria-hidden="true">→</span></a>
+  </nav>
+</main>
+
+<footer class="footer" style="margin-top: 0">
+  <div class="wrap footer-inner">
+    <div class="stack" style="gap: var(--x); max-width: 44ch">
+      <div class="logo-ph">HS KL Logo weiß<br>(offizielle Datei)</div>
+      <p style="font-size: 16px">Ein Projekt im Studiengang Virtual Design, Hochschule Kaiserslautern.</p>
+    </div>
+    <nav class="footer-legal" aria-label="Rechtliches">
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="mock-tools" aria-label="Mockup-Werkzeug">
+  <label>Schrift
+    <select id="font-mode">
+      <option value="fallback">Fallback (Poppins)</option>
+      <option value="preview">Brand-Vorschau (Stratos-Ersatz)</option>
+    </select>
+  </label>
+  <label>Projektfarbe
+    <select id="key-color">
+      <option value="s-green">Grün</option>
+      <option value="s-blue">Blau</option>
+      <option value="s-yellow">Gelb</option>
+    </select>
+  </label>
+</div>
+
+<script src="mockup.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# HS KL brand fonts: the license forbids sharing the files (see README)
+hskl_Fonts/
+hskl_Fonts.zip
+
+# Archive already unpacked in the repo
+creative-science-starter.zip
+
+# Personal learning notes (VibeWise)
+.vibe-wise/
+
+.DS_Store
