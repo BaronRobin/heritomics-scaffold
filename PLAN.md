@@ -2,7 +2,7 @@
 
 What this repo still needs before it becomes the scaffold every group works in, and who can pick up what. Last updated: 22 Oct 2026.
 
-The repo is moving from a hand-built HTML demo (`demo/`) to an Astro site at the repo root. The brief behind it is `creative-science-starter/CLAUDE_CODE_PROMPT.md`; the design rules are in `docs/DESIGN.md`.
+The repo moved from a hand-built HTML demo to an Astro site at the repo root. The brief behind it is `creative-science-starter/CLAUDE_CODE_PROMPT.md`; the design rules are in `docs/DESIGN.md`.
 
 **Status:** ✅ done · 🔄 in progress · ⬜ not started · 👥 needs people, not code
 
@@ -49,7 +49,7 @@ The repo is moving from a hand-built HTML demo (`demo/`) to an Astro site at the
 - ✅ Thinner placeholder fog in the splat sample
 - ✅ When a format fails to load, focus moves to the error message
 - ✅ Deploy runs on push only once the repository variable `PAGES_ENABLED` is `true` (no red runs before Pages is on)
-- ⬜ Remove the old static `demo/` folder once the team no longer needs it (waiting for a decision)
+- ✅ Removed the old static `demo/` folder (everything in it now lives in the Astro site)
 
 ## Order
 

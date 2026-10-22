@@ -7,7 +7,6 @@
   "exclude": [
     "dist",
     "artifact-export",
-    "demo",
     "creative-science-starter",
     "test-results",
     "playwright-report",

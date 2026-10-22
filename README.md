@@ -49,7 +49,6 @@ Prepare images, video and 3D files as described in [docs/MEDIA.md](docs/MEDIA.md
 ```
 .github/                 CI and deploy workflows, pull request checklist
 creative-science-starter/  original brief, design guide draft, tokens and mockup
-demo/                    the first hand-built HTML demo (open demo/index.html)
 docs/                    the guides listed above
 media/selectedplants/    original photos and videos from @selectedplants
 public/                  files served as they are
