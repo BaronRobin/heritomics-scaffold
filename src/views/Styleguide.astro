@@ -2,6 +2,8 @@
 // Styleguide (brief: Information architecture 5): every token, type style, component and embed format
 // in one place, as the visual reference for all groups. Source of truth: docs/DESIGN.md + tokens.css.
 import { Picture } from 'astro:assets';
+import Surface from '../components/Surface.astro';
+import Headline from '../components/Headline.astro';
 import Experience from '../components/Experience.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ExternalLink from '../components/ExternalLink.astro';
@@ -76,12 +78,12 @@ const formatSamples = await Promise.all(samples.map(async (s) => ({ ...s, projec
 ---
 <div class="wrap section styleguide">
   <header class="stack intro">
-    <h1 class="d t-h1">{copy.title}</h1>
+    <Headline level={1}>{copy.title}</Headline>
     <p class="t-lead">{copy.lead}</p>
   </header>
 
   <section aria-labelledby="sg-colors" class="block">
-    <h2 id="sg-colors" class="d t-h2">{copy.colors}</h2>
+    <Headline level={2} id="sg-colors">{copy.colors}</Headline>
     <p class="note">{copy.colorsNote}</p>
     <ul class="plain-list swatches">
       {colors.map((c) => (
@@ -94,7 +96,7 @@ const formatSamples = await Promise.all(samples.map(async (s) => ({ ...s, projec
   </section>
 
   <section aria-labelledby="sg-type" class="block">
-    <h2 id="sg-type" class="d t-h2">{copy.type}</h2>
+    <Headline level={2} id="sg-type">{copy.type}</Headline>
     <p class="note">{copy.typeNote}</p>
     <dl class="type-list">
       {typeScale.map((s) => (
@@ -107,7 +109,7 @@ const formatSamples = await Promise.all(samples.map(async (s) => ({ ...s, projec
   </section>
 
   <section aria-labelledby="sg-space" class="block">
-    <h2 id="sg-space" class="d t-h2">{copy.space}</h2>
+    <Headline level={2} id="sg-space">{copy.space}</Headline>
     <p class="note">{copy.spaceNote}</p>
     <ul class="plain-list spaces">
       {spaces.map((s) => <li class="space-row"><code class="t-small">{s}</code><span class="space-bar" style={`width: var(${s})`}></span></li>)}
@@ -115,22 +117,22 @@ const formatSamples = await Promise.all(samples.map(async (s) => ({ ...s, projec
   </section>
 
   <section aria-labelledby="sg-surfaces" class="block">
-    <h2 id="sg-surfaces" class="d t-h2">{copy.surfaces}</h2>
+    <Headline level={2} id="sg-surfaces">{copy.surfaces}</Headline>
     <p class="note">{copy.surfacesNote}</p>
     <div class="overlap surfaces-demo">
       <div class="frame surfaces-img">
         <Picture src={surfaceImage} alt={de ? 'Weiße, gelappte Flechte auf Gestein' : 'White, lobed lichen on rock'} formats={['avif', 'webp']} widths={[480, 800]} sizes="(max-width: 900px) 100vw, 50vw" loading="lazy" />
         <span class="credit">{t(lang, 'photo.credit')}: Dr. Patrick Jung (@selectedplants)</span>
       </div>
-      <div class="surface s-green surfaces-text">
+      <Surface color="green" class="surfaces-text">
         <p class="topline">s-green</p>
         <p class="t-h3">{copy.sample}</p>
-      </div>
+      </Surface>
     </div>
   </section>
 
   <section aria-labelledby="sg-buttons" class="block">
-    <h2 id="sg-buttons" class="d t-h2">{copy.buttons}</h2>
+    <Headline level={2} id="sg-buttons">{copy.buttons}</Headline>
     <div class="row">
       <a class="btn" href="#sg-buttons">{t(lang, 'home.cta')} <span aria-hidden="true">→</span></a>
       <a class="cta" href="#sg-buttons">{t(lang, 'home.allExperiences')} <span aria-hidden="true">→</span></a>
@@ -145,7 +147,7 @@ const formatSamples = await Promise.all(samples.map(async (s) => ({ ...s, projec
   </section>
 
   <section aria-labelledby="sg-chips" class="block">
-    <h2 id="sg-chips" class="d t-h2">{copy.chips}</h2>
+    <Headline level={2} id="sg-chips">{copy.chips}</Headline>
     <div class="chips" role="group" aria-label={copy.chips}>
       <button class="chip" type="button" aria-pressed="true">{t(lang, 'filter.all')}</button>
       <button class="chip" type="button" aria-pressed="false">{t(lang, 'format.video')}</button>
@@ -158,12 +160,12 @@ const formatSamples = await Promise.all(samples.map(async (s) => ({ ...s, projec
   </section>
 
   <section aria-labelledby="sg-cards" class="block">
-    <h2 id="sg-cards" class="d t-h2">{copy.cards}</h2>
+    <Headline level={2} id="sg-cards">{copy.cards}</Headline>
     <ul class="three plain-list">{listed.map((p) => <li><ProjectCard project={p} lang={lang} headingLevel={3} /></li>)}</ul>
   </section>
 
   <section aria-labelledby="sg-figure" class="block">
-    <h2 id="sg-figure" class="d t-h2">{copy.figure}</h2>
+    <Headline level={2} id="sg-figure">{copy.figure}</Headline>
     <p class="note">{copy.figureNote}</p>
     <figure class="stack figure">
       <div class="frame frame-sci">
@@ -174,7 +176,7 @@ const formatSamples = await Promise.all(samples.map(async (s) => ({ ...s, projec
   </section>
 
   <section aria-labelledby="sg-formats" class="block">
-    <h2 id="sg-formats" class="d t-h2">{copy.formats}</h2>
+    <Headline level={2} id="sg-formats">{copy.formats}</Headline>
     <p class="note">{copy.formatsNote}</p>
   </section>
 </div>

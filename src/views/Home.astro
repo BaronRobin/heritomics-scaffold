@@ -2,6 +2,8 @@
 // Home page, shared by /de/ and /en/: hero, how it works, featured experiences, research teaser.
 // UI words come from src/i18n/ui.ts; texts used only here (alt texts, empty state) are below.
 import { Picture } from 'astro:assets';
+import Surface from '../components/Surface.astro';
+import Headline from '../components/Headline.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ExternalLink from '../components/ExternalLink.astro';
 import { t, type UIKey } from '../i18n/ui';
@@ -40,19 +42,17 @@ const steps = [1, 2, 3].map((n) => ({
   text: t(lang, `home.step${n}.text` as UIKey),
 }));
 
-// Umlaut rule (DESIGN.md 4.4): more line height for display headlines with Ä, Ö, Ü
-const hasUmlaut = (s: string) => /[äöüÄÖÜ]/.test(s);
 const title = t(lang, 'home.title');
 const researchTitle = t(lang, 'home.research.title');
 ---
 <section class="wrap hero" aria-labelledby="home-title">
   <div class="overlap">
-    <div class="surface s-yellow hero-surface">
+    <Surface color="yellow" class="hero-surface">
       <p class="topline">{t(lang, 'home.topline')}</p>
-      <h1 id="home-title" class:list={['d', 't-display', { 'd-u': hasUmlaut(title) }]}>{title}</h1>
+      <Headline level={1} size="display" id="home-title">{title}</Headline>
       <p class="t-lead hero-lead">{t(lang, 'home.lead')}</p>
       <p class="hero-cta"><a class="btn" href={path(lang, 'experiences')}>{t(lang, 'home.cta')} <span aria-hidden="true">→</span></a></p>
-    </div>
+    </Surface>
     <figure class="frame hero-img">
       {/* Cropped to 6:5 at build time (closer to the frame's shape, lighter). It is the page's hero visual, so the
           budget check counts it like a cover (scripts/check-budgets.mjs); without the mark the page is at about 91 %. */}
@@ -75,7 +75,7 @@ const researchTitle = t(lang, 'home.research.title');
 </section>
 
 <section class="wrap section" aria-labelledby="home-how">
-  <h2 id="home-how" class="d t-h2 section-title">{t(lang, 'home.how')}</h2>
+  <Headline level={2} id="home-how" class="section-title">{t(lang, 'home.how')}</Headline>
   <ol class="plain-list three" role="list">
     {steps.map((s) => (
       <li class="step">
@@ -89,7 +89,7 @@ const researchTitle = t(lang, 'home.research.title');
 
 <section class="wrap section" aria-labelledby="home-experiences">
   <div class="section-head">
-    <h2 id="home-experiences" class="d t-h2">{t(lang, 'home.experiences')}</h2>
+    <Headline level={2} id="home-experiences">{t(lang, 'home.experiences')}</Headline>
     {projects.length > 0 && (
       <a class="cta all-link" href={path(lang, 'experiences')}>{t(lang, 'home.allExperiences')} <span aria-hidden="true">→</span></a>
     )}
@@ -107,16 +107,16 @@ const researchTitle = t(lang, 'home.research.title');
 
 <section class="wrap section-lg" aria-labelledby="home-research">
   <div class="overlap">
-    <div class="surface s-green research-surface">
+    <Surface color="green" class="research-surface">
       <p class="topline">{t(lang, 'home.research.topline')}</p>
-      <h2 id="home-research" class:list={['d', 't-h2', { 'd-u': hasUmlaut(researchTitle) }]}>{researchTitle}</h2>
+      <Headline level={2} id="home-research">{researchTitle}</Headline>
       <p class="research-text">{t(lang, 'home.research.text')}</p>
       <figure class="research-quote">
         <blockquote lang="en"><p class="t-lead quote">“{quote}”</p></blockquote>
         <figcaption class="t-small"><strong>Dr. Patrick Jung</strong>, {t(lang, 'home.research.quoteBy')}</figcaption>
       </figure>
       <p class="research-cta"><ExternalLink href={labUrl} lang={lang} class="cta">{t(lang, 'home.research.cta')}</ExternalLink></p>
-    </div>
+    </Surface>
     <figure class="frame research-img">
       <Picture
         src={labImage}

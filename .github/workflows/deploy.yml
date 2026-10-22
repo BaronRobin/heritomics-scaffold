@@ -10,6 +10,10 @@
 #   point to the wrong place. With a custom domain, set `site` to that domain and leave `base` out.
 #
 # The privacy and budget checks run here too, so a build that breaks the rules is never published.
+#
+# Until Pages is enabled, pushes to main skip this workflow instead of failing. When Pages is on, add the
+# repository variable PAGES_ENABLED = true (Settings > Secrets and variables > Actions > Variables).
+# "Run workflow" by hand always runs it.
 name: Deploy to GitHub Pages
 
 on:
@@ -27,6 +31,7 @@ concurrency:
 
 jobs:
   build:
+    if: github.event_name == 'workflow_dispatch' || vars.PAGES_ENABLED == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -47,6 +52,9 @@ jobs:
       - name: Validate content
         run: npm run validate --if-present
 
+      - name: Type check (Astro + TypeScript)
+        run: npm run check
+
       - name: Build site
         run: npm run build
 
@@ -56,8 +64,11 @@ jobs:
       - name: Page budgets (JS and total size)
         run: npm run check:budgets
 
+      - name: Install the test browser (Chromium for Playwright)
+        run: npx playwright install --with-deps chromium
+
       - name: Tests
-        run: npm test --if-present
+        run: npm test
 
       - name: Upload site for GitHub Pages
         uses: actions/upload-pages-artifact@v5

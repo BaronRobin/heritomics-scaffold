@@ -1,5 +1,16 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist", "demo", "creative-science-starter"]
+  "include": [
+    ".astro/types.d.ts",
+    "**/*"
+  ],
+  "exclude": [
+    "dist",
+    "artifact-export",
+    "demo",
+    "creative-science-starter",
+    "test-results",
+    "playwright-report",
+    "public/builds"
+  ]
 }

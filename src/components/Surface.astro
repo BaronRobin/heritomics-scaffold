@@ -1,0 +1,22 @@
+---
+// Surface (Flächenprinzip, DESIGN.md 6.3): a flat rectangle in white or one surface color that text sits on.
+// Surfaces overlap images or other surfaces, never stand isolated and never sit edge to edge.
+// - color: white, yellow, blue or green (at most two surface colors per screen)
+// - span: grid columns on wide screens, e.g. "1 / 8" (on phones it spans the full width)
+// - overlap: pulls the surface 1x over its neighbour on that side
+// Layouts with their own responsive overlap pass a class instead of span/overlap.
+interface Props {
+  color?: 'white' | 'yellow' | 'blue' | 'green';
+  span?: string;
+  overlap?: 'top' | 'bottom' | 'left' | 'right';
+  as?: 'div' | 'section' | 'aside' | 'li';
+  class?: string;
+  [attr: string]: unknown;
+}
+const { color = 'white', span, overlap, as: Tag = 'div', class: className, ...attrs } = Astro.props;
+---
+<Tag
+  class:list={['surface', color !== 'white' && `s-${color}`, span && 'surface-span', overlap && `surface-overlap-${overlap}`, className]}
+  style={span ? `--surface-span: ${span}` : undefined}
+  {...attrs}
+><slot /></Tag>

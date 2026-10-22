@@ -3,6 +3,8 @@
 // never write legal text here. Everything in [brackets] waits for the official wording.
 // Only "Projekt", "Nachweise" and "Schriften" are our own facts about the site, not legal text.
 import ExternalLink from '../components/ExternalLink.astro';
+import Surface from '../components/Surface.astro';
+import Headline from '../components/Headline.astro';
 import { t } from '../i18n/ui';
 import type { Lang } from '../i18n/routes';
 
@@ -45,10 +47,10 @@ const c = copy[lang];
 ---
 <div class="wrap section">
   <div class="legal">
-    <h1 class="d t-h1">{t(lang, 'footer.imprint')}</h1>
-    <div class="surface s-green">
+    <Headline level={1}>{t(lang, 'footer.imprint')}</Headline>
+    <Surface color="green">
       <p><strong>{t(lang, 'placeholder')}.</strong> {c.notice}</p>
-    </div>
+    </Surface>
     <section class="stack" aria-labelledby="imprint-provider">
       <h2 id="imprint-provider" class="t-h3">{c.provider}</h2>
       <p>{c.providerText}</p>

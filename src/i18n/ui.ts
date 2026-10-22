@@ -131,6 +131,7 @@ const de = {
   'iframe.offline': 'Der Stream ist gerade nicht erreichbar.',
   'iframe.offlineAlt': 'Video-Rundgang ansehen',
   'iframe.title': 'Eingebettete Anwendung',
+  'iframe.notStarting': 'Stream startet nicht?',
 } as const;
 
 export type UIKey = keyof typeof de;
@@ -257,6 +258,7 @@ const en: Record<UIKey, string> = {
   'iframe.offline': 'The stream is not available right now.',
   'iframe.offlineAlt': 'Watch the video walkthrough',
   'iframe.title': 'Embedded application',
+  'iframe.notStarting': 'Stream not starting?',
 };
 
 export const ui = { de, en } as const;

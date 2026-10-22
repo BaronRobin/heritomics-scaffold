@@ -2,6 +2,7 @@
 // Experiences index (brief: Information architecture 2): every listed project, filterable by
 // research field, format and group. Without JavaScript all cards show and the filters stay hidden.
 import ProjectCard from '../components/ProjectCard.astro';
+import Headline from '../components/Headline.astro';
 import { t, type UIKey } from '../i18n/ui';
 import type { Lang } from '../i18n/routes';
 import { getProjects } from '../lib/projects';
@@ -22,7 +23,7 @@ const filters = [
 ];
 ---
 <section class="wrap section" aria-labelledby="index-title">
-  <h1 id="index-title" class="d t-h1">{t(lang, 'index.title')}</h1>
+  <Headline level={1} id="index-title">{t(lang, 'index.title')}</Headline>
   <p class="t-lead lead">{t(lang, 'index.lead')}</p>
 
   <div class="filters" data-filters hidden>

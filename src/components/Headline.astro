@@ -1,0 +1,21 @@
+---
+// Display headline (DESIGN.md 4.3, 4.4): Stratos UPPERCASE in brand-font mode, Poppins Bold in fallback mode.
+// The umlaut rule lives here, so pages never handle it: a headline with Ä, Ö or Ü gets line height 1.0
+// instead of 0.9, so the dots don't touch the line above. Use it for every display headline.
+interface Props {
+  /** Heading level, following the page outline */
+  level: 1 | 2 | 3;
+  /** Type size token; defaults to h1 for level 1 and h2 otherwise */
+  size?: 'display' | 'h1' | 'h2';
+  id?: string;
+  lang?: string;
+  class?: string;
+  /** Other attributes pass through, including the page's style scope, so its CSS still applies */
+  [attr: string]: unknown;
+}
+const { level, size = level === 1 ? 'h1' : 'h2', id, lang, class: className, ...attrs } = Astro.props;
+const Tag = `h${level}` as 'h1' | 'h2' | 'h3';
+const html = await Astro.slots.render('default');
+const umlaut = /[ÄÖÜäöü]|&[AOUaou]uml;/.test(html);
+---
+<Tag {...attrs} id={id} lang={lang} class:list={['d', `t-${size}`, { 'd-u': umlaut }, className]} set:html={html} />

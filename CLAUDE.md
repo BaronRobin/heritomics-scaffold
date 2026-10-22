@@ -32,6 +32,7 @@ The Creative Science hub: HS Kaiserslautern, Master Virtual Design, part of the 
 
 ```sh
 npm run validate         # schema, image sizes, alt texts, public/ files, translations
+npm run check            # TypeScript and Astro type check
 npm run build            # static build into dist/
 npm run check:external   # no external requests on page load (needs a build)
 npm run check:budgets    # home/index pages: max. 100 KB JS gzipped, 500 KB total (needs a build)

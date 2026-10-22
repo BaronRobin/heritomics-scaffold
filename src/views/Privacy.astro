@@ -4,6 +4,8 @@
 // official wording. The list "Was diese Website technisch tut" only states facts about the
 // page code. Keep it true: update it whenever the site starts doing something new.
 import { t } from '../i18n/ui';
+import Surface from '../components/Surface.astro';
+import Headline from '../components/Headline.astro';
 import type { Lang } from '../i18n/routes';
 
 interface Props { lang: Lang }
@@ -53,10 +55,10 @@ const c = copy[lang];
 ---
 <div class="wrap section">
   <div class="legal">
-    <h1 class="d t-h1">{t(lang, 'footer.privacy')}</h1>
-    <div class="surface s-green">
+    <Headline level={1}>{t(lang, 'footer.privacy')}</Headline>
+    <Surface color="green">
       <p><strong>{t(lang, 'placeholder')}.</strong> {c.notice}</p>
-    </div>
+    </Surface>
     <section class="stack" aria-labelledby="privacy-technical">
       <h2 id="privacy-technical" class="t-h3">{c.technical}</h2>
       <ul>

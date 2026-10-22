@@ -3,6 +3,7 @@
 // requirement chips, notices and the yellow start button. After start: the format fills the running box.
 // The format component goes into the slot: it provides the config and <template> that stage.ts mounts.
 import { Picture } from 'astro:assets';
+import Headline from './Headline.astro';
 import { t, type UIKey } from '../i18n/ui';
 import type { Lang } from '../i18n/routes';
 import type { LocalProject } from '../lib/projects';
@@ -42,7 +43,7 @@ const otherLang = (l: string) => (l !== lang ? l : undefined);
         <div class="stage-mount" data-stage-mount></div>
         <div class="stage-progress" data-stage-progress role="progressbar" aria-label={t(lang, 'stage.loading')}
           aria-valuemin="0" aria-valuemax="100" hidden></div>
-        <p class="stage-error" data-stage-error role="alert" hidden>{t(lang, 'stage.error')}</p>
+        <p class="stage-error" data-stage-error role="alert" tabindex="-1" hidden>{t(lang, 'stage.error')}</p>
         <button class="btn-o stage-fs" type="button" data-stage-fs aria-label={t(lang, 'stage.fullscreen')}
           data-label-enter={t(lang, 'stage.fullscreen')} data-label-exit={t(lang, 'stage.exitFullscreen')}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></svg>
@@ -52,7 +53,7 @@ const otherLang = (l: string) => (l !== lang ? l : undefined);
     </div>
     <div class="stage-info">
       <p class="topline">{t(lang, `format.${d.format}` as UIKey)} · {t(lang, 'duration.min', { n: d.durationMinutes })}</p>
-      <h2 id={titleId} class:list={['d t-h2', { 'd-u': /[ÄÖÜäöü]/.test(title.text) }]} lang={otherLang(title.lang)}>{title.text}</h2>
+      <Headline level={2} id={titleId} lang={otherLang(title.lang)}>{title.text}</Headline>
       {project.stage && <p lang={otherLang(project.stage.text.lang)}>{project.stage.text.text}</p>}
       {project.requirements.length > 0 && (
         <ul class="chips" aria-label={t(lang, 'stage.requirements')}>
