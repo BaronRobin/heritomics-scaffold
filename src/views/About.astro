@@ -5,6 +5,8 @@
 // Everything in [brackets] is a placeholder for the course team to fill in. Never invent
 // names, numbers or quotes here, and check every scientific sentence with the scientist.
 import { Picture } from 'astro:assets';
+import Surface from '../components/Surface.astro';
+import Headline from '../components/Headline.astro';
 import ExternalLink from '../components/ExternalLink.astro';
 import { t } from '../i18n/ui';
 import type { Lang } from '../i18n/routes';
@@ -123,19 +125,17 @@ const credit = `${t(lang, 'photo.credit')}: Dr. Patrick Jung (@selectedplants)`;
 const labUrl = 'https://www.selectedplants.de/';
 const labName = 'XCEL – Extreme Cryptogam Ecology Lab';
 
-// Umlaut rule (DESIGN.md 4.4): more line height for display headlines with Ä, Ö, Ü
-const display = (s: string, size: 't-h1' | 't-h2') => ['d', size, { 'd-u': /[äöüÄÖÜ]/.test(s) }];
 ---
 <section class="wrap intro" aria-labelledby="about-title">
   <p class="topline">{copy.topline}</p>
-  <h1 id="about-title" class:list={display(copy.title, 't-h1')}>{copy.title}</h1>
+  <Headline level={1} id="about-title">{copy.title}</Headline>
   <p class="t-lead intro-lead">{copy.lead}</p>
 </section>
 
 <section class="wrap section" aria-labelledby="about-approach">
   <div class="two">
     <div class="two-a stack">
-      <h2 id="about-approach" class:list={display(copy.approachTitle, 't-h2')}>{copy.approachTitle}</h2>
+      <Headline level={2} id="about-approach">{copy.approachTitle}</Headline>
       <p class="t-lead">{copy.approachLead}</p>
       {copy.approachText.map((p) => <p class="measure">{p}</p>)}
     </div>
@@ -150,7 +150,7 @@ const display = (s: string, size: 't-h1' | 't-h2') => ['d', size, { 'd-u': /[ä�
 
 <section class="wrap section" aria-labelledby="about-levels">
   <div class="stack section-head">
-    <h2 id="about-levels" class:list={display(copy.levelsTitle, 't-h2')}>{copy.levelsTitle}</h2>
+    <Headline level={2} id="about-levels">{copy.levelsTitle}</Headline>
     <p class="measure">{copy.levelsText}</p>
   </div>
   <ol class="plain-list three" role="list">
@@ -166,7 +166,7 @@ const display = (s: string, size: 't-h1' | 't-h2') => ['d', size, { 'd-u': /[ä�
 </section>
 
 <section class="wrap section" aria-labelledby="about-principles">
-  <h2 id="about-principles" class:list={[...display(copy.principlesTitle, 't-h2'), 'section-title']}>{copy.principlesTitle}</h2>
+  <Headline level={2} id="about-principles" class="section-title">{copy.principlesTitle}</Headline>
   <ul class="plain-list rows principles" role="list">
     {copy.principles.map((p) => (
       <li class="principle">
@@ -178,15 +178,15 @@ const display = (s: string, size: 't-h1' | 't-h2') => ['d', size, { 'd-u': /[ä�
 </section>
 
 <section class="wrap section-lg" aria-labelledby="about-partners">
-  <h2 id="about-partners" class:list={[...display(copy.partnersTitle, 't-h2'), 'section-title']}>{copy.partnersTitle}</h2>
+  <Headline level={2} id="about-partners" class="section-title">{copy.partnersTitle}</Headline>
   <div class="overlap">
-    <div class="surface s-green xcel">
+    <Surface color="green" class="xcel">
       <p class="topline">{copy.xcelTopline}</p>
       <h3 class="t-h3">{lang === 'en' ? labName : <span lang="en">{labName}</span>}</h3>
       <p class="partner-text">{copy.xcelText}</p>
       <p class="partner-text">{copy.xcelPerson}</p>
       <p class="xcel-cta"><ExternalLink href={labUrl} lang={lang} class="cta">{t(lang, 'home.research.cta')}</ExternalLink></p>
-    </div>
+    </Surface>
     <figure class="frame xcel-img">
       <Picture
         src={lichenImage}
@@ -213,7 +213,7 @@ const display = (s: string, size: 't-h1' | 't-h2') => ['d', size, { 'd-u': /[ä�
 </section>
 
 <section class="wrap section" aria-labelledby="about-courses">
-  <h2 id="about-courses" class:list={[...display(copy.coursesTitle, 't-h2'), 'section-title']}>{copy.coursesTitle}</h2>
+  <Headline level={2} id="about-courses" class="section-title">{copy.coursesTitle}</Headline>
   <div class="two">
     <div class="two-a stack">
       <h3 class="t-h3">Creative Science</h3>

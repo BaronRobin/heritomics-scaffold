@@ -71,6 +71,7 @@ function setup(stage: HTMLElement) {
       if (!signal.aborted) {
         console.error(err);
         error.hidden = false;
+        error.focus(); // keyboard users land on the message, next to Stop
       }
     } finally {
       if (!signal.aborted) bar.hidden = true;

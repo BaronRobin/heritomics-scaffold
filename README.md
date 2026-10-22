@@ -49,7 +49,6 @@ Prepare images, video and 3D files as described in [docs/MEDIA.md](docs/MEDIA.md
 ```
 .github/                 CI and deploy workflows, pull request checklist
 creative-science-starter/  original brief, design guide draft, tokens and mockup
-demo/                    the first hand-built HTML demo (open demo/index.html)
 docs/                    the guides listed above
 media/selectedplants/    original photos and videos from @selectedplants
 public/                  files served as they are
@@ -83,6 +82,7 @@ Run them in the repo folder.
 | `npm run dev` | Starts the site at http://localhost:4321/ and reloads on every save. Shows drafts. |
 | `npm run build` | Builds the finished site into `dist/`. Drafts are left out. |
 | `npm run preview` | Serves the built `dist/` on your computer, to check the real result. |
+| `npm run check` | Type-checks the code (Astro components and TypeScript). |
 | `npm run validate` | Checks every project: fields, image sizes, alt texts, files in `public/`, missing English text. Add `-- --strict` to make warnings fail too. |
 | `npm run check:external` | After a build: fails if any page would load something from another domain ([docs/PRIVACY.md](docs/PRIVACY.md)). |
 | `npm run check:budgets` | After a build: checks that the home and index pages stay under 100 KB of JavaScript (gzipped) and 500 KB in total. |
@@ -99,6 +99,7 @@ Two GitHub Actions workflows live in `.github/workflows/`:
 Before the deploy works, the maintainer must:
 
 - Enable Pages: repository Settings > Pages > Source: "GitHub Actions".
+- Add the repository variable `PAGES_ENABLED` = `true` (Settings > Secrets and variables > Actions > Variables). Until then, pushes to `main` skip the deploy instead of failing; "Run workflow" by hand always runs it.
 - Use a paid GitHub plan (Pro, Team or Enterprise) if the repository is private. On the free plan, Pages needs a public repository.
 - Set `site` and `base` in `astro.config.mjs`. For `https://<owner>.github.io/<repo>/` that is `site: 'https://<owner>.github.io'` and `base: '/<repo>'`. With a custom domain, set `site` only. Neither is set yet.
 

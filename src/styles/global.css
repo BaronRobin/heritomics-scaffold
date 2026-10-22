@@ -54,6 +54,12 @@ a:focus-visible, button:focus-visible, select:focus-visible, [tabindex]:focus-vi
 .s-yellow { background: var(--color-yellow); }
 .s-blue { background: var(--color-blue); }
 .s-green { background: var(--color-green); }
+.surface-span { grid-column: 1 / -1; }
+@media (min-width: 901px) { .surface-span { grid-column: var(--surface-span); } }
+.surface-overlap-top { margin-top: calc(var(--x) * -1); }
+.surface-overlap-bottom { margin-bottom: calc(var(--x) * -1); }
+.surface-overlap-left { margin-left: calc(var(--x) * -1); }
+.surface-overlap-right { margin-right: calc(var(--x) * -1); }
 
 /* ---------- Media frames ---------- */
 .frame { position: relative; overflow: hidden; background: var(--color-green); transition: transform var(--dur-base) var(--ease); }

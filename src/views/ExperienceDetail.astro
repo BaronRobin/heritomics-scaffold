@@ -2,6 +2,8 @@
 // Experience detail page (brief: Information architecture 3; DESIGN.md 1.3, 7.4, 7.7, 7.8).
 // Three levels: Überblick (hero), Erleben (Stage), Vertiefen (method, sources, scientist).
 import { Picture } from 'astro:assets';
+import Surface from '../components/Surface.astro';
+import Headline from '../components/Headline.astro';
 import { render } from 'astro:content';
 import Experience from '../components/Experience.astro';
 import ExternalLink from '../components/ExternalLink.astro';
@@ -17,7 +19,6 @@ const bodyEntry = lang === 'en' && p.translation?.body?.trim() ? p.translation :
 const bodyLang: Lang = bodyEntry === p.entry ? 'de' : 'en';
 const { Content } = await render(bodyEntry);
 const other = (l: string) => (l !== lang ? l : undefined);
-const umlaut = (s: string) => /[ÄÖÜäöü]/.test(s);
 const topline = [p.field.text, p.place?.text, d.example ? t(lang, 'card.example') : undefined].filter(Boolean).join(' · ');
 const deeper = [
   { key: 'detail.method', text: p.method },
@@ -48,16 +49,16 @@ const deeper = [
         pictureAttributes={{ 'data-budget': 'cover' }} />
       <span class="credit">{t(lang, 'photo.credit')}: {d.coverCredit}{d.duplexCover ? ', Duplex' : ''}</span>
     </div>
-    <div class={`surface s-${d.surface} hero-surface`}>
+    <Surface color={d.surface} class="hero-surface">
       <p class="topline">{topline}</p>
-      <h1 id="page-title" class:list={['d t-h1', { 'd-u': umlaut(p.title.text) }]} lang={other(p.title.lang)}>{p.title.text}</h1>
+      <Headline level={1} id="page-title" lang={other(p.title.lang)}>{p.title.text}</Headline>
       <p class="t-lead" lang={other(p.lead.lang)}>{p.lead.text}</p>
       <p class="meta-row t-small">
         <span><strong>{t(lang, 'detail.group')}</strong> {d.group}</span>
         <span><strong>{t(lang, 'detail.format')}</strong> {t(lang, `format.${d.format}` as UIKey)}</span>
         <span><strong>{t(lang, 'detail.duration')}</strong> {t(lang, 'duration.min', { n: d.durationMinutes })}</span>
       </p>
-    </div>
+    </Surface>
   </div>
 </section>
 
@@ -68,7 +69,7 @@ const deeper = [
   <div class="two">
     <div class="two-a stack">
       <p class="topline">{t(lang, 'detail.question')}</p>
-      <h2 id="frage" class:list={['d t-h2', { 'd-u': umlaut(p.question.title.text) }]} lang={other(p.question.title.lang)}>{p.question.title.text}</h2>
+      <Headline level={2} id="frage" lang={other(p.question.title.lang)}>{p.question.title.text}</Headline>
       <p class="measure" lang={other(p.question.text.lang)}>{p.question.text.text}</p>
       {p.question.source && (
         <p class="t-small grey"><ExternalLink href={p.question.source.url} lang={lang}>{p.question.source.label}</ExternalLink></p>
@@ -89,7 +90,7 @@ const deeper = [
 <!-- Level 3: Vertiefen -->
 <section id="vertiefen" class="deeper" aria-labelledby="vert">
   <div class="wrap section">
-    <h2 id="vert" class="d t-h2">{t(lang, 'depth.deeper')}</h2>
+    <Headline level={2} id="vert">{t(lang, 'depth.deeper')}</Headline>
     <div class="two">
       <div class="two-a stack deeper-text">
         {deeper.map((s) => (
@@ -117,7 +118,7 @@ const deeper = [
         {d.scientists.map((s) => (
           <div class="scientist">
             <div class="placeholder portrait">{t(lang, 'detail.portrait')}</div>
-            <div class={`surface s-${d.surface} sci-card`}>
+            <Surface color={d.surface} class="sci-card">
               <p class="topline">{t(lang, 'detail.research')}</p>
               <h3 class="t-h3">{s.name}</h3>
               {s.role && <p class="t-small" lang={other('de')}>{s.role}</p>}
@@ -129,7 +130,7 @@ const deeper = [
                   <p class="t-small">{s.quote.source}</p>
                 </blockquote>
               )}
-            </div>
+            </Surface>
           </div>
         ))}
       </aside>

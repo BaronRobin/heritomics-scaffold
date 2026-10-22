@@ -2,7 +2,7 @@
 
 What this repo still needs before it becomes the scaffold every group works in, and who can pick up what. Last updated: 22 Oct 2026.
 
-The repo is moving from a hand-built HTML demo (`demo/`) to an Astro site at the repo root. The brief behind it is `creative-science-starter/CLAUDE_CODE_PROMPT.md`; the design rules are in `docs/DESIGN.md`.
+The repo moved from a hand-built HTML demo to an Astro site at the repo root. The brief behind it is `creative-science-starter/CLAUDE_CODE_PROMPT.md`; the design rules are in `docs/DESIGN.md`.
 
 **Status:** ✅ done · 🔄 in progress · ⬜ not started · 👥 needs people, not code
 
@@ -43,11 +43,13 @@ The repo is moving from a hand-built HTML demo (`demo/`) to an Astro site at the
 
 ## Small follow-ups
 
-- `<Surface>` and `<Headline>` components, which DESIGN.md names (pages use the `.surface` class and the umlaut rule directly for now)
-- Type checking: add `@astrojs/check` and `@types/three`, run `astro check` in CI
-- Move the inline "stream not starting" text of the iframe format into `src/i18n/ui.ts`
-- Remove the old static `demo/` folder once the team no longer needs it
-- Placeholder splat fog is still quite dense
+- ✅ `<Headline>` (applies the umlaut rule itself) and `<Surface>` (`color`, `span`, `overlap`) from DESIGN.md, used on every page
+- ✅ Type checking: `npm run check` (`astro check`, TypeScript 6), also in CI and deploy
+- ✅ The iframe format's "stream not starting" text lives in `src/i18n/ui.ts`
+- ✅ Thinner placeholder fog in the splat sample
+- ✅ When a format fails to load, focus moves to the error message
+- ✅ Deploy runs on push only once the repository variable `PAGES_ENABLED` is `true` (no red runs before Pages is on)
+- ✅ Removed the old static `demo/` folder (everything in it now lives in the Astro site)
 
 ## Order
 

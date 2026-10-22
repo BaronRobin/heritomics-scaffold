@@ -39,6 +39,9 @@ jobs:
       - name: Validate content
         run: npm run validate --if-present
 
+      - name: Type check (Astro + TypeScript)
+        run: npm run check
+
       - name: Build site
         run: npm run build
 

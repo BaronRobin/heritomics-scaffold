@@ -130,13 +130,13 @@ function fogCloud(THREE: typeof import('three'), splats: import('@sparkjsdev/spa
     splats.pushSplat(center, scales, flat, 0.95, color);
   }
   // Fog: soft, light splats, densest near the ground and drifting in from one side
-  for (let i = 0; i < 7000; i++) {
+  for (let i = 0; i < 4000; i++) {
     const y = Math.abs(gauss()) * 0.5;
     center.set(gauss() * 1.5 - 0.3, 0.05 + y, gauss() * 1.0);
-    const s = 0.03 + rand() * 0.06;
+    const s = 0.02 + rand() * 0.04;
     scales.set(s, s * 0.6, s);
     const light = 0.8 + rand() * 0.2;
     color.setRGB(light, light, Math.min(1, light + 0.04));
-    splats.pushSplat(center, scales, flat, 0.02 + rand() * 0.05, color);
+    splats.pushSplat(center, scales, flat, 0.012 + rand() * 0.03, color);
   }
 }

@@ -2,13 +2,14 @@
 // 404: one page for the whole site. The URL does not tell us the language, so German comes
 // first (default language) and English follows in its own section with lang="en".
 import Base from '../layouts/Base.astro';
+import Headline from '../components/Headline.astro';
 import { path } from '../i18n/routes';
 ---
 <Base lang="de" routeKey="home" title="Seite nicht gefunden">
   <div class="wrap section">
     <div class="not-found">
       <div class="stack">
-        <h1 class="d t-h1">Seite nicht gefunden</h1>
+        <Headline level={1}>Seite nicht gefunden</Headline>
         <p>Diese Seite gibt es nicht oder nicht mehr. Vielleicht hat sich ihre Adresse geändert.</p>
         <a class="btn" href={path('de', 'home')}>Zur Startseite</a>
       </div>

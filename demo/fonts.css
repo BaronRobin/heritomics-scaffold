@@ -1,7 +1,0 @@
-/* Self-hosted open fonts (SIL OFL 1.1, licenses in fonts/). No requests to Google Fonts. */
-@font-face { font-family: "Poppins"; src: url("fonts/poppins-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
-@font-face { font-family: "Poppins"; src: url("fonts/poppins-latin-500-normal.woff2") format("woff2"); font-weight: 500; font-display: swap; }
-@font-face { font-family: "Poppins"; src: url("fonts/poppins-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-display: swap; }
-@font-face { font-family: "Poppins"; src: url("fonts/poppins-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-display: swap; }
-/* Mockup-only stand-in for Stratos in the preview mode */
-@font-face { font-family: "Anton"; src: url("fonts/anton-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }

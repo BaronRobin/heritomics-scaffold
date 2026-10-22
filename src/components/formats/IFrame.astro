@@ -26,8 +26,7 @@ const fallback = embed.kind === 'pixelstreaming' && embed.offline ? {
   // A custom label exists only in index.mdx, so it is German
   label: embed.offline.label ? { text: embed.offline.label, lang: 'de' as Lang } : { text: t(lang, 'iframe.offlineAlt'), lang },
 } : undefined;
-// [Not in src/i18n/ui.ts yet: candidate key "iframe.notStarting"]
-const notStarting = lang === 'de' ? 'Stream startet nicht?' : 'Stream not starting?';
+const notStarting = t(lang, 'iframe.notStarting');
 
 const config = embed.kind === 'build'
   ? { kind: 'build', src: asset(embed.src), title: title.text, titleLang: title.lang }
