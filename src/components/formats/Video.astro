@@ -1,0 +1,70 @@
+---
+// Format "video" (DESIGN.md 7.4 and 10, PRIVACY.md). Contract: src/scripts/stage-types.ts.
+// - Self-hosted: the <video> sits in the <template>, so nothing downloads before "Start".
+//   src/scripts/formats/video.ts starts it (or only shows the controls with reduced motion).
+// - YouTube/Vimeo: only provider, id and title go into the JSON config. The privacy-enhanced iframe
+//   is built after the click, so no external URL appears in the HTML (scripts/check-external.mjs).
+// - The text alternative sits outside the template: readable before, during and after playback.
+import { t } from '../../i18n/ui';
+import { asset, type Lang } from '../../i18n/routes';
+import { embedText, type LocalProject } from '../../lib/projects';
+
+interface Props { project: LocalProject; lang: Lang }
+const { project, lang } = Astro.props;
+const d = project.entry.data;
+const embed = d.format === 'video' ? d.embed : undefined;
+const file = embed && 'sources' in embed ? embed : undefined;
+const external = embed && 'provider' in embed ? embed : undefined;
+
+// The schema has no poster for the <video> itself (the Stage shows the project poster); use one if given.
+const poster = file && 'poster' in file && typeof file.poster === 'string' ? file.poster : undefined;
+// Captions on by default in the page language, otherwise the first track.
+const defaultTrack = file ? Math.max(0, file.captions.findIndex((c) => c.lang === lang)) : -1;
+const alternative = file ? embedText(project, lang, 'textAlternative', file.textAlternative) : undefined;
+
+const config = external
+  ? { kind: 'external', provider: external.provider, id: external.id, title: external.title }
+  : { kind: 'file' };
+// "<" escaped so a title can never close the script element
+const json = JSON.stringify(config).replace(/</g, '\\u003c');
+---
+<script is:inline type="application/json" data-stage-config set:html={json} />
+{file && (
+  <template data-stage-template>
+    <video class="video-player" controls playsinline preload="none" width={file.width} height={file.height}
+      poster={poster ? asset(poster) : undefined} aria-labelledby="stage-title">
+      {file.sources.map((s) => <source src={asset(s.src)} type={s.type} />)}
+      {file.captions.map((c, i) => (
+        <track kind="captions" src={asset(c.src)} srclang={c.lang} label={c.label} default={i === defaultTrack} />
+      ))}
+    </video>
+  </template>
+)}
+{alternative && (
+  <details class="video-alt">
+    <summary>{t(lang, 'stage.textAlternative')}</summary>
+    <p lang={alternative.lang !== lang ? alternative.lang : undefined}>{alternative.text}</p>
+  </details>
+)}
+
+<style is:global>
+  [data-stage][data-format="video"] .stage-mount > video,
+  [data-stage][data-format="video"] .stage-mount > iframe {
+    display: block; width: 100%; height: 100%; border: 0; background: var(--stage-bg);
+  }
+  [data-stage][data-format="video"] .stage-mount > video { object-fit: contain; }
+  [data-stage][data-format="video"] .video-alt {
+    margin-top: var(--x-half); max-width: var(--measure); color: var(--stage-text);
+    border-top: var(--rule-width) solid var(--stage-text);
+  }
+  [data-stage][data-format="video"] .video-alt summary {
+    cursor: pointer; padding-block: var(--space-3); font-weight: 700; min-height: 2.75rem;
+  }
+  /* Same ring as global.css (DESIGN.md 7.3), which only covers a, button, select and [tabindex] */
+  [data-stage][data-format="video"] .stage-mount > video:focus-visible,
+  [data-stage][data-format="video"] .stage-mount > iframe:focus-visible,
+  [data-stage][data-format="video"] .video-alt summary:focus-visible {
+    outline: var(--focus-width) solid var(--focus-halo); outline-offset: 2px; box-shadow: 0 0 0 2px var(--focus);
+  }
+  [data-stage][data-format="video"] .video-alt p { padding-bottom: var(--space-3); }
+</style>

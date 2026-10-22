@@ -1,0 +1,101 @@
+---
+// The black Stage around every experience (DESIGN.md 7.4). Before start: poster, format and duration,
+// requirement chips, notices and the yellow start button. After start: the format fills the running box.
+// The format component goes into the slot: it provides the config and <template> that stage.ts mounts.
+import { Picture } from 'astro:assets';
+import { t, type UIKey } from '../i18n/ui';
+import type { Lang } from '../i18n/routes';
+import type { LocalProject } from '../lib/projects';
+
+interface Props {
+  project: LocalProject;
+  lang: Lang;
+  /** CSS aspect ratio of the running experience, e.g. "16 / 9" */
+  aspect: string;
+  /** Name of the external service contacted after the click, if any */
+  service?: string;
+  /** Download size of the main file, already formatted, e.g. "1,4 MB" */
+  size?: string;
+  /** id of the section; the depth navigation links to "erleben". Use another one when a page has several Stages. */
+  anchor?: string;
+}
+const { project, lang, aspect, service, size, anchor = 'erleben' } = Astro.props;
+const titleId = `${anchor}-title`;
+const d = project.entry.data;
+const [aw, ah] = aspect.split('/').map((n) => Number(n.trim()));
+const title = project.stage?.title ?? project.title;
+const posterImage = d.poster ?? d.cover;
+const posterAlt = project.posterAlt ?? project.coverAlt;
+const loadNote = [t(lang, 'stage.loadsAfterClick'), size && t(lang, 'stage.size', { size })].filter(Boolean).join(', ');
+const otherLang = (l: string) => (l !== lang ? l : undefined);
+---
+<section id={anchor} class="stage" aria-labelledby={titleId} data-stage data-format={d.format}
+  style={`--stage-aspect: ${aspect}; --stage-ratio: ${aw / ah}`}>
+  <div class="wrap stage-grid">
+    <div class="stage-media">
+      <div class="frame stage-box" data-stage-poster>
+        <Picture src={posterImage} alt={posterAlt.text} lang={otherLang(posterAlt.lang)} formats={['avif', 'webp']}
+          widths={[640, 960, 1280]} sizes="(max-width: 900px) 100vw, 66vw" loading="lazy" />
+        <span class="credit">{t(lang, 'photo.credit')}: {d.coverCredit}</span>
+      </div>
+      <div class="stage-running" data-stage-running role="region" aria-labelledby={titleId} tabindex="-1" hidden>
+        <div class="stage-mount" data-stage-mount></div>
+        <div class="stage-progress" data-stage-progress role="progressbar" aria-label={t(lang, 'stage.loading')}
+          aria-valuemin="0" aria-valuemax="100" hidden></div>
+        <p class="stage-error" data-stage-error role="alert" hidden>{t(lang, 'stage.error')}</p>
+        <button class="btn-o stage-fs" type="button" data-stage-fs aria-label={t(lang, 'stage.fullscreen')}
+          data-label-enter={t(lang, 'stage.fullscreen')} data-label-exit={t(lang, 'stage.exitFullscreen')}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></svg>
+        </button>
+      </div>
+      <slot />
+    </div>
+    <div class="stage-info">
+      <p class="topline">{t(lang, `format.${d.format}` as UIKey)} · {t(lang, 'duration.min', { n: d.durationMinutes })}</p>
+      <h2 id={titleId} class:list={['d t-h2', { 'd-u': /[ÄÖÜäöü]/.test(title.text) }]} lang={otherLang(title.lang)}>{title.text}</h2>
+      {project.stage && <p lang={otherLang(project.stage.text.lang)}>{project.stage.text.text}</p>}
+      {project.requirements.length > 0 && (
+        <ul class="chips" aria-label={t(lang, 'stage.requirements')}>
+          {project.requirements.map((r) => <li class="chip-o" lang={otherLang(r.lang)}>{r.text}</li>)}
+        </ul>
+      )}
+      {d.format === 'webxr' && <p class="t-small"><strong>{t(lang, 'stage.note')}</strong> {t(lang, 'stage.motion')}</p>}
+      <div class="stack" data-stage-startbox>
+        <button class="btn btn-y" type="button" data-stage-start>{t(lang, 'stage.start')} <span aria-hidden="true">→</span></button>
+        <p class="t-small">{loadNote}. {service ? t(lang, 'stage.external', { service }) : t(lang, 'stage.noExternal')}</p>
+      </div>
+      <button class="btn-o" type="button" data-stage-stop hidden>{t(lang, 'stage.stop')}</button>
+    </div>
+  </div>
+</section>
+
+<script>
+  import '../scripts/stage';
+</script>
+
+<style>
+  .stage { background: var(--stage-bg); color: var(--stage-text); padding-block: var(--x-2); }
+  .stage-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--x); align-items: start; }
+  .stage-media { grid-column: 1 / 9; min-width: 0; }
+  .stage-info { grid-column: 9 / 13; display: flex; flex-direction: column; gap: var(--x-half); }
+  .stage-box { aspect-ratio: 16 / 9; background: var(--stage-bg); }
+  .stage-running {
+    position: relative; aspect-ratio: var(--stage-aspect);
+    width: min(100%, calc(80vh * var(--stage-ratio))); margin-inline: auto;
+    border: var(--rule-width) solid var(--color-white); background: var(--stage-bg);
+  }
+  .stage-running:fullscreen { width: 100%; height: 100%; aspect-ratio: auto; border: 0; }
+  .stage-mount { position: absolute; inset: 0; }
+  .stage-fs { position: absolute; top: var(--space-3); right: var(--space-3); padding: var(--space-2); z-index: 2; }
+  .stage-error { position: absolute; inset: auto var(--space-4) var(--space-4); z-index: 2; }
+  .stage-progress { position: absolute; left: 0; right: 0; bottom: 0; height: var(--space-1); z-index: 2; }
+  .stage-progress::before { content: ""; display: block; height: 100%; width: var(--progress, 0%); background: var(--color-white); transition: width var(--dur-fast) var(--ease); }
+  .stage-progress[data-indeterminate]::before { width: 30%; }
+  @media (prefers-reduced-motion: no-preference) {
+    .stage-progress[data-indeterminate]::before { animation: stage-busy 1.2s var(--ease) infinite; }
+  }
+  @keyframes stage-busy { from { transform: translateX(-100%); } to { transform: translateX(340%); } }
+  @media (max-width: 900px) {
+    .stage-media, .stage-info { grid-column: 1 / -1; }
+  }
+</style>

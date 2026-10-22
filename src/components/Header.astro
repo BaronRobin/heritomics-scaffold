@@ -1,0 +1,54 @@
+---
+// Site header (DESIGN.md 7.1): logo placeholder, hub name, main navigation, language toggle.
+// On phones the navigation moves into a full-screen yellow <dialog>.
+import { t } from '../i18n/ui';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { path, asset, type Lang, type RouteKey } from '../i18n/routes';
+import LangToggle from './LangToggle.astro';
+
+interface Props { lang: Lang; routeKey: RouteKey; slug?: string }
+const { lang, routeKey, slug } = Astro.props;
+// Official logo from public/brand/ once the press office files are there; a placeholder until then
+const logo = existsSync(join(process.cwd(), 'public/brand/hskl-logo-black.svg')) ? asset('brand/hskl-logo-black.svg') : undefined;
+const isExperiences = routeKey === 'experiences';
+const links = [
+  { href: path(lang, 'experiences'), label: t(lang, 'nav.experiences'), current: isExperiences },
+  { href: path(lang, 'about'), label: t(lang, 'nav.about'), current: routeKey === 'about' },
+];
+---
+<header class="wrap nav">
+  <div class="brand">
+    {logo ? <img class="logo" src={logo} alt="Hochschule Kaiserslautern" /> : <div class="placeholder logo">{t(lang, 'logo.hskl')}</div>}
+    <a class="d brand-name" href={path(lang, 'home')}>{t(lang, 'site.name')}</a>
+  </div>
+  <nav class="navlinks" aria-label={t(lang, 'nav.main')}>
+    {links.map((l) => <a href={l.href} aria-current={l.current ? 'page' : undefined}>{l.label}</a>)}
+    <LangToggle lang={lang} routeKey={routeKey} slug={slug} />
+  </nav>
+  <button class="menu-btn" type="button" data-menu-open aria-haspopup="dialog">{t(lang, 'menu.open')}</button>
+  <dialog class="menu" data-menu aria-label={t(lang, 'menu.label')}>
+    <button class="menu-btn" type="button" data-menu-close>{t(lang, 'menu.close')}</button>
+    <nav aria-label={t(lang, 'nav.mobile')}>
+      {links.map((l) => <a href={l.href} aria-current={l.current ? 'page' : undefined}>{l.label}</a>)}
+    </nav>
+    <LangToggle lang={lang} routeKey={routeKey} slug={slug} />
+  </dialog>
+</header>
+
+<script>
+  // Mobile menu: showModal() keeps focus inside, closes on Escape and makes the page behind inert.
+  const dialog = document.querySelector<HTMLDialogElement>('[data-menu]');
+  const openBtn = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+  if (dialog && openBtn) {
+    openBtn.addEventListener('click', () => dialog.showModal());
+    dialog.querySelector('[data-menu-close]')?.addEventListener('click', () => dialog.close());
+    dialog.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => dialog.close()));
+  }
+</script>
+
+<style>
+  .menu { width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; border: 0; color: var(--text); }
+  .menu:not([open]) { display: none; }
+  .menu::backdrop { background: var(--color-yellow); }
+</style>

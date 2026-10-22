@@ -1,0 +1,64 @@
+---
+# PROJEKTVORLAGE (deutsche Fassung, alle Felder).
+# 1. Kopiere diesen Ordner nach src/content/projects/<slug>/ (siehe README.md hier im Ordner).
+# 2. Ersetze alles in [eckigen Klammern] und das Titelbild cover.jpg.
+# 3. Prüfe mit: npm run validate
+# Jedes Feld ist in docs/CONTENT.md erklärt. Zeilen mit # sind Kommentare und erscheinen nicht auf der Seite.
+
+# ── Überblick: Karte im Index und Kopf der Projektseite ──
+title: "[Kurzer Titel, etwa fünf Wörter.]"
+hook: "[Ein Satz, der neugierig macht. Höchstens 120 Zeichen.]"
+lead: "[Ein bis zwei Sätze unter dem Titel: Worum geht es?]"
+group: "[Gruppenname]"
+team: ["[Vorname Nachname]", "[Vorname Nachname]"]
+supervision: ["[Name der Lehrenden]"]
+scientists:
+  - name: "[Name der Forscherin oder des Forschers]"
+    institution: "[Institution]"
+    field: "[Fachgebiet]"
+    # Optional: ein Zitat in der Ich-Form, von der Person freigegeben. Zum Benutzen das # vor den vier Zeilen entfernen.
+    # quote:
+    #   text: "[Zitat in der Ich-Form]"
+    #   lang: de
+    #   source: "[Wo es gesagt oder geschrieben wurde]"
+field: "[Forschungsfeld, z. B. Biokrusten]"   # für den Filter: gleiche Schreibweise wie andere Projekte im selben Feld
+place: "[Ort, z. B. Atacama-Wüste]"            # optional, Zeile löschen, wenn es keinen Ort gibt
+durationMinutes: 5                              # [Wie viele Minuten dauert das Erlebnis? Nur eine Zahl.]
+requirements: ["[z. B. Desktop empfohlen]", "[z. B. Ohne Ton]"]
+surface: green                                  # Schlüsselfarbe des Projekts: yellow, blue oder green
+
+# ── Titelbild: liegt neben dieser Datei ──
+cover: ./cover.jpg                              # ERSETZEN: 3:2, mindestens 2400 × 1600 px, JPEG
+coverAlt: "[Was auf dem Titelbild zu sehen ist, in einem Satz.]"
+coverFocus: 50% 50%                             # Punkt, der beim Zuschneiden sichtbar bleibt (0% 0% = links oben)
+coverCredit: "[Wer das Foto gemacht hat]"
+
+# ── Erleben: die schwarze Bühne ──
+stage:
+  title: "[Kurzer Titel über der Bühne.]"
+  text: "[Ein Satz: Was kann man hier tun?]"
+format: model3d
+embed:
+  src: media/placeholder-crust.glb              # ERSETZEN: euer Modell in public/, z. B. media/<slug>/modell.glb
+  placeholder: true                             # auf false setzen, sobald euer echtes Modell eingetragen ist
+  description: "[Ein bis zwei Sätze: Was zeigt das Modell? Für Menschen, die es nicht sehen können.]"
+
+# ── Die Frage ──
+question:
+  title: "[Die Forschungsfrage als kurze Frage?]"
+  text: >-
+    [Bis zu 80 Wörter in einfacher Sprache. Erkläre jeden Fachbegriff beim ersten Mal. Jede
+    wissenschaftliche Aussage stimmt ihr mit der Forscherin oder dem Forscher ab.]
+
+# ── Vertiefen: alles optional. Lösche Zeilen, die ihr nicht braucht. ──
+method: "[Wie die Daten entstanden sind: Probenahme, Messung, Mikroskopie.]"
+results: "[Was die Daten zeigen.]"
+design: "[Wie ihr aus der Forschung ein Erlebnis gemacht habt: Ideen, Prototypen, Entscheidungen.]"
+sources:
+  - title: "[Autorin, A. (Jahr). Titel. Zeitschrift oder Website.]"
+    lang: de
+    # url: https://doi.org/...   (optional, ohne Klammern; das # entfernen)
+
+# ── Veröffentlichung ──
+status: draft                                   # draft = nur in npm run dev sichtbar; published = auf der Website
+---

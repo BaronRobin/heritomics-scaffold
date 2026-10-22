@@ -1,0 +1,195 @@
+---
+// Experience detail page (brief: Information architecture 3; DESIGN.md 1.3, 7.4, 7.7, 7.8).
+// Three levels: Überblick (hero), Erleben (Stage), Vertiefen (method, sources, scientist).
+import { Picture } from 'astro:assets';
+import { render } from 'astro:content';
+import Experience from '../components/Experience.astro';
+import ExternalLink from '../components/ExternalLink.astro';
+import { t, type UIKey } from '../i18n/ui';
+import { path, type Lang } from '../i18n/routes';
+import type { LocalProject } from '../lib/projects';
+
+interface Props { project: LocalProject; prev: LocalProject; next: LocalProject; lang: Lang }
+const { project: p, prev, next, lang } = Astro.props;
+const d = p.entry.data;
+// The text below the frontmatter: en.mdx's on English pages when it has one, else index.mdx's (German)
+const bodyEntry = lang === 'en' && p.translation?.body?.trim() ? p.translation : p.entry;
+const bodyLang: Lang = bodyEntry === p.entry ? 'de' : 'en';
+const { Content } = await render(bodyEntry);
+const other = (l: string) => (l !== lang ? l : undefined);
+const umlaut = (s: string) => /[ÄÖÜäöü]/.test(s);
+const topline = [p.field.text, p.place?.text, d.example ? t(lang, 'card.example') : undefined].filter(Boolean).join(' · ');
+const deeper = [
+  { key: 'detail.method', text: p.method },
+  { key: 'detail.results', text: p.results },
+  { key: 'detail.design', text: p.design },
+].filter((s) => s.text) as { key: UIKey; text: { text: string; lang: Lang } }[];
+---
+<div class="depth">
+  <nav class="wrap" aria-label={t(lang, 'depth.label')}>
+    <a href="#ueberblick" aria-current="location">{t(lang, 'depth.glance')}</a>
+    <span aria-hidden="true">·</span>
+    <a href="#erleben">{t(lang, 'depth.experience')}</a>
+    <span aria-hidden="true">·</span>
+    <a href="#vertiefen">{t(lang, 'depth.deeper')}</a>
+  </nav>
+</div>
+
+{p.fallback && <p class="wrap fallback t-small">{t(lang, 'detail.fallback')}</p>}
+
+<!-- Level 1: Überblick -->
+<section id="ueberblick" class="wrap overview" aria-labelledby="page-title">
+  <a class="cta back-link" href={path(lang, 'experiences')}><span aria-hidden="true">←</span> {t(lang, 'detail.back')}</a>
+  <div class="overlap">
+    <div class:list={['frame hero-img', { 'frame-duplex': d.duplexCover }]}>
+      <Picture src={d.cover} alt={p.coverAlt.text} lang={other(p.coverAlt.lang)} formats={['avif', 'webp']}
+        widths={[640, 960, 1280, 1600]} sizes="(max-width: 900px) 100vw, 58vw" loading="eager" fetchpriority="high"
+        class={d.duplexCover ? 'duplex' : undefined} style={`object-position: ${d.coverFocus}`}
+        pictureAttributes={{ 'data-budget': 'cover' }} />
+      <span class="credit">{t(lang, 'photo.credit')}: {d.coverCredit}{d.duplexCover ? ', Duplex' : ''}</span>
+    </div>
+    <div class={`surface s-${d.surface} hero-surface`}>
+      <p class="topline">{topline}</p>
+      <h1 id="page-title" class:list={['d t-h1', { 'd-u': umlaut(p.title.text) }]} lang={other(p.title.lang)}>{p.title.text}</h1>
+      <p class="t-lead" lang={other(p.lead.lang)}>{p.lead.text}</p>
+      <p class="meta-row t-small">
+        <span><strong>{t(lang, 'detail.group')}</strong> {d.group}</span>
+        <span><strong>{t(lang, 'detail.format')}</strong> {t(lang, `format.${d.format}` as UIKey)}</span>
+        <span><strong>{t(lang, 'detail.duration')}</strong> {t(lang, 'duration.min', { n: d.durationMinutes })}</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Level 2: Erleben -->
+<Experience project={p} lang={lang} />
+
+<section class="wrap section-lg" aria-labelledby="frage">
+  <div class="two">
+    <div class="two-a stack">
+      <p class="topline">{t(lang, 'detail.question')}</p>
+      <h2 id="frage" class:list={['d t-h2', { 'd-u': umlaut(p.question.title.text) }]} lang={other(p.question.title.lang)}>{p.question.title.text}</h2>
+      <p class="measure" lang={other(p.question.text.lang)}>{p.question.text.text}</p>
+      {p.question.source && (
+        <p class="t-small grey"><ExternalLink href={p.question.source.url} lang={lang}>{p.question.source.label}</ExternalLink></p>
+      )}
+    </div>
+    {d.question.figure && p.question.figure && (
+      <figure class="two-b stack figure">
+        <div class:list={['frame', { 'frame-sci': d.question.figure.scientific }]}>
+          <Picture src={d.question.figure.image} alt={p.question.figure.alt.text} lang={other(p.question.figure.alt.lang)}
+            formats={['avif', 'webp']} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 40vw" loading="lazy" />
+        </div>
+        <figcaption class="t-small" lang={other(p.question.figure.caption.lang)}>{p.question.figure.caption.text}</figcaption>
+      </figure>
+    )}
+  </div>
+</section>
+
+<!-- Level 3: Vertiefen -->
+<section id="vertiefen" class="deeper" aria-labelledby="vert">
+  <div class="wrap section">
+    <h2 id="vert" class="d t-h2">{t(lang, 'depth.deeper')}</h2>
+    <div class="two">
+      <div class="two-a stack deeper-text">
+        {deeper.map((s) => (
+          <div class="stack">
+            <h3 class="t-h3">{t(lang, s.key)}</h3>
+            <p class="measure" lang={other(s.text.lang)}>{s.text.text}</p>
+          </div>
+        ))}
+        <div class="mdx measure" lang={other(bodyLang)}><Content /></div>
+        {d.sources.length > 0 && (
+          <div>
+            <h3 class="t-h3">{t(lang, 'detail.sources')}</h3>
+            <ul class="plain-list sources">
+              {d.sources.map((s) => (
+                <li class="src">
+                  <span lang={s.lang && other(s.lang)}>{s.title}</span>
+                  {s.url && <ExternalLink class="cta" href={s.url} lang={lang} srContext={s.title.slice(0, 60)}>{t(lang, 'detail.read')}</ExternalLink>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+      <aside class="two-b scientists" aria-label={t(lang, 'detail.research')}>
+        {d.scientists.map((s) => (
+          <div class="scientist">
+            <div class="placeholder portrait">{t(lang, 'detail.portrait')}</div>
+            <div class={`surface s-${d.surface} sci-card`}>
+              <p class="topline">{t(lang, 'detail.research')}</p>
+              <h3 class="t-h3">{s.name}</h3>
+              {s.role && <p class="t-small" lang={other('de')}>{s.role}</p>}
+              <p class="t-small">{s.institution}</p>
+              <p class="t-small" lang={other('de')}>{s.field}</p>
+              {s.quote && (
+                <blockquote>
+                  <p class="t-quote" lang={other(s.quote.lang)}>{s.quote.lang === 'de' ? `„${s.quote.text}“` : `“${s.quote.text}”`}</p>
+                  <p class="t-small">{s.quote.source}</p>
+                </blockquote>
+              )}
+            </div>
+          </div>
+        ))}
+      </aside>
+    </div>
+    <p class="credits t-small">
+      <strong>{t(lang, 'detail.team')}</strong> {d.team.join(', ')}
+      {d.supervision.length > 0 && <>· <strong>{t(lang, 'detail.supervision')}</strong> {d.supervision.join(', ')}</>}
+      · <strong>{t(lang, 'detail.content')}</strong> {d.scientists.map((s) => s.name).join(', ')}
+    </p>
+  </div>
+</section>
+
+<nav class="wrap pager" aria-label={t(lang, 'detail.more')}>
+  <a class="cta" href={path(lang, 'experiences', prev.slug)} rel="prev"><span aria-hidden="true">←</span> <span class="sr-only">{t(lang, 'detail.prev')} </span><span lang={other(prev.title.lang)}>{prev.title.text}</span></a>
+  <a class="cta" href={path(lang, 'experiences', next.slug)} rel="next"><span class="sr-only">{t(lang, 'detail.next')} </span><span lang={other(next.title.lang)}>{next.title.text}</span> <span aria-hidden="true">→</span></a>
+</nav>
+
+<script>
+  // Depth navigation: mark the level currently on screen
+  const links = document.querySelectorAll<HTMLAnchorElement>('.depth a');
+  if (links.length && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        links.forEach((a) => a.getAttribute('href') === `#${e.target.id}` ? a.setAttribute('aria-current', 'location') : a.removeAttribute('aria-current'));
+      }
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    links.forEach((a) => { const s = document.getElementById(a.hash.slice(1)); if (s) io.observe(s); });
+  }
+</script>
+
+<style>
+  .depth { position: sticky; top: 0; z-index: 5; background: var(--bg); border-block: var(--rule-width) solid var(--rule); }
+  .depth nav { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--x); font-size: var(--type-cta); }
+  .depth a { display: inline-block; padding-block: var(--space-3); text-decoration: none; font-weight: 700; }
+  .depth a:hover, .depth a[aria-current] { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 0.2em; }
+  .fallback { padding-block: var(--space-3); border-bottom: var(--rule-width) solid var(--rule); }
+  .overview { padding-top: var(--x-half); padding-bottom: var(--x-3); display: flex; flex-direction: column; gap: var(--x-half); }
+  .back-link { align-self: flex-start; }
+  .hero-img { grid-column: 6 / 13; grid-row: 1; aspect-ratio: 4 / 3; }
+  .hero-surface { grid-column: 1 / 8; grid-row: 1; align-self: center; padding-right: var(--x-2); }
+  .meta-row { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--x); }
+  .figure .frame { aspect-ratio: 1 / 1; }
+  .deeper { border-top: var(--rule-width) solid var(--rule); }
+  .deeper h2 { margin-bottom: var(--x); }
+  .deeper-text { gap: var(--x); }
+  .deeper-text h3 { margin-bottom: var(--space-2); }
+  .mdx:empty { display: none; }
+  .src { display: flex; justify-content: space-between; gap: var(--x); border-top: var(--rule-width) solid var(--rule); padding-block: var(--space-3); font-size: var(--type-cta); line-height: var(--lh-small); }
+  .src:last-child { border-bottom: var(--rule-width) solid var(--rule); }
+  .src span { min-width: 0; }
+  .src :global(a) { flex-shrink: 0; }
+  .scientists { display: flex; flex-direction: column; gap: var(--x-2); }
+  .portrait { aspect-ratio: 4 / 5; }
+  .sci-card { margin: calc(var(--x) * -1) 0 0 var(--x); }
+  .credits { margin-top: var(--x-2); border-top: var(--rule-width) solid var(--rule); padding-top: var(--space-3); }
+  .pager { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--x); padding-block: var(--x-2); }
+  .pager a { padding-block: var(--space-2); }
+  @media (max-width: 900px) {
+    .hero-img { grid-column: 1 / -1; aspect-ratio: 3 / 2; }
+    .hero-surface { grid-column: 1 / -1; grid-row: 2; margin: calc(var(--x) * -1) var(--x) 0 0; padding-right: var(--x); }
+  }
+</style>

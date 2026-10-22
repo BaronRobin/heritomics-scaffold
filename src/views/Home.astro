@@ -1,0 +1,172 @@
+---
+// Home page, shared by /de/ and /en/: hero, how it works, featured experiences, research teaser.
+// UI words come from src/i18n/ui.ts; texts used only here (alt texts, empty state) are below.
+import { Picture } from 'astro:assets';
+import ProjectCard from '../components/ProjectCard.astro';
+import ExternalLink from '../components/ExternalLink.astro';
+import { t, type UIKey } from '../i18n/ui';
+import { path, type Lang } from '../i18n/routes';
+import { getProjects } from '../lib/projects';
+import heroImage from '../assets/home/crust-green-rocks.jpg';
+import labImage from '../assets/home/lab-cultures.jpg';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+const copy = {
+  de: {
+    heroAlt: 'Steine, überzogen mit grünen und dunklen Krusten',
+    labAlt: 'Laborflaschen mit grünen Algenkulturen',
+    empty: 'Die ersten Erlebnisse der Gruppen erscheinen hier bald.',
+  },
+  en: {
+    heroAlt: 'Stones covered in green and dark crusts',
+    labAlt: 'Lab flasks holding green algae cultures',
+    empty: 'The groups’ first experiences will appear here soon.',
+  },
+}[lang];
+
+const credit = `${t(lang, 'photo.credit')}: Dr. Patrick Jung (@selectedplants)`;
+const quote = 'My research is driven by the question on how these microorganisms can influence ecosystems from their micro niche to the landscape scale.';
+const labUrl = 'https://www.selectedplants.de/';
+
+const projects = await getProjects(lang);
+const featured = projects.filter((p) => p.entry.data.featured);
+const shown = featured.length > 0 ? featured : projects.slice(0, 3);
+
+const steps = [1, 2, 3].map((n) => ({
+  num: String(n).padStart(2, '0'),
+  title: t(lang, `home.step${n}.title` as UIKey),
+  text: t(lang, `home.step${n}.text` as UIKey),
+}));
+
+// Umlaut rule (DESIGN.md 4.4): more line height for display headlines with Ä, Ö, Ü
+const hasUmlaut = (s: string) => /[äöüÄÖÜ]/.test(s);
+const title = t(lang, 'home.title');
+const researchTitle = t(lang, 'home.research.title');
+---
+<section class="wrap hero" aria-labelledby="home-title">
+  <div class="overlap">
+    <div class="surface s-yellow hero-surface">
+      <p class="topline">{t(lang, 'home.topline')}</p>
+      <h1 id="home-title" class:list={['d', 't-display', { 'd-u': hasUmlaut(title) }]}>{title}</h1>
+      <p class="t-lead hero-lead">{t(lang, 'home.lead')}</p>
+      <p class="hero-cta"><a class="btn" href={path(lang, 'experiences')}>{t(lang, 'home.cta')} <span aria-hidden="true">→</span></a></p>
+    </div>
+    <figure class="frame hero-img">
+      {/* Cropped to 6:5 at build time (closer to the frame's shape, lighter). It is the page's hero visual, so the
+          budget check counts it like a cover (scripts/check-budgets.mjs); without the mark the page is at about 91 %. */}
+      <Picture
+        src={heroImage}
+        width={1200}
+        height={1000}
+        fit="cover"
+        formats={['avif', 'webp']}
+        widths={[640, 960, 1200]}
+        sizes="(max-width: 900px) 100vw, (max-width: 1520px) 67vw, 1000px"
+        alt={copy.heroAlt}
+        loading="eager"
+        fetchpriority="high"
+        pictureAttributes={{ 'data-budget': 'cover' }}
+      />
+      <figcaption class="credit">{credit}</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="wrap section" aria-labelledby="home-how">
+  <h2 id="home-how" class="d t-h2 section-title">{t(lang, 'home.how')}</h2>
+  <ol class="plain-list three" role="list">
+    {steps.map((s) => (
+      <li class="step">
+        <span class="d step-num" aria-hidden="true">{s.num}</span>
+        <h3 class="t-h3">{s.title}</h3>
+        <p class="step-text">{s.text}</p>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<section class="wrap section" aria-labelledby="home-experiences">
+  <div class="section-head">
+    <h2 id="home-experiences" class="d t-h2">{t(lang, 'home.experiences')}</h2>
+    {projects.length > 0 && (
+      <a class="cta all-link" href={path(lang, 'experiences')}>{t(lang, 'home.allExperiences')} <span aria-hidden="true">→</span></a>
+    )}
+  </div>
+  {shown.length > 0 ? (
+    <ul class="plain-list three" role="list">
+      {shown.map((p) => (
+        <li><ProjectCard project={p} lang={lang} headingLevel={3} /></li>
+      ))}
+    </ul>
+  ) : (
+    <p class="measure">{copy.empty}</p>
+  )}
+</section>
+
+<section class="wrap section-lg" aria-labelledby="home-research">
+  <div class="overlap">
+    <div class="surface s-green research-surface">
+      <p class="topline">{t(lang, 'home.research.topline')}</p>
+      <h2 id="home-research" class:list={['d', 't-h2', { 'd-u': hasUmlaut(researchTitle) }]}>{researchTitle}</h2>
+      <p class="research-text">{t(lang, 'home.research.text')}</p>
+      <figure class="research-quote">
+        <blockquote lang="en"><p class="t-lead quote">“{quote}”</p></blockquote>
+        <figcaption class="t-small"><strong>Dr. Patrick Jung</strong>, {t(lang, 'home.research.quoteBy')}</figcaption>
+      </figure>
+      <p class="research-cta"><ExternalLink href={labUrl} lang={lang} class="cta">{t(lang, 'home.research.cta')}</ExternalLink></p>
+    </div>
+    <figure class="frame research-img">
+      <Picture
+        src={labImage}
+        formats={['avif', 'webp']}
+        widths={[480, 800, 1157]}
+        sizes="(max-width: 900px) 100vw, (max-width: 1520px) 50vw, 760px"
+        alt={copy.labAlt}
+        loading="lazy"
+      />
+      <figcaption class="credit">{credit}</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  /* Hero: photo on the right, yellow surface overlapping it from the left and below (DESIGN.md 6.3) */
+  .hero { padding-block: var(--space-4) var(--x-3); }
+  .hero-surface { grid-column: 1 / 9; grid-row: 1; align-self: end; margin-top: var(--x-3); margin-bottom: calc(var(--x) * -1.5); padding-right: var(--x-2); padding-bottom: calc(var(--x) * 1.5); }
+  /* The photo stretches to the row, so it always rises 3x above the surface, however long the text is */
+  .hero-img { grid-column: 5 / 13; grid-row: 1; min-height: calc(var(--x) * 15); }
+  /* Credits sit where no surface covers the photo: top right in the hero */
+  .hero-img .credit { top: var(--space-4); bottom: auto; left: auto; }
+  .hero-lead { margin-top: var(--x-half); max-width: 34ch; }
+  .hero-cta { margin-top: var(--x-half); }
+
+  /* How it works */
+  .section-title { margin-bottom: var(--x); }
+  .step { display: flex; flex-direction: column; gap: var(--space-2); border-top: var(--rule-width) solid var(--rule); padding-top: var(--x-half); }
+  .step-num { font-size: var(--type-h2); line-height: 1; }
+  .step-text { max-width: 36ch; }
+
+  /* Featured experiences */
+  .section-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: var(--x-half) var(--x); margin-bottom: var(--x); }
+  .all-link { display: inline-block; padding-block: var(--space-2); }
+
+  /* Research teaser: green surface overlapping the lab photo from the right */
+  .research-img { grid-column: 1 / 7; grid-row: 1; height: calc(var(--x) * 14); }
+  .research-surface { grid-column: 6 / 13; grid-row: 1; align-self: center; }
+  .research-text { max-width: 52ch; }
+  .research-quote { display: flex; flex-direction: column; gap: var(--space-2); }
+  .quote { font-weight: 500; max-width: none; }
+  .research-cta { margin-top: var(--space-2); }
+
+  /* Phones and tablets: photo on top, surface below with a 1x overlap (DESIGN.md 6.3) */
+  @media (max-width: 900px) {
+    .hero { padding-bottom: var(--x-2); }
+    .hero-img { grid-column: 1 / -1; grid-row: 1; min-height: 0; height: calc(var(--x) * 14); }
+    .hero-surface { grid-column: 1 / -1; grid-row: 2; margin: calc(var(--x) * -1) var(--x) 0 0; padding-right: var(--x); padding-bottom: var(--x); }
+    .research-img { grid-column: 1 / -1; grid-row: 1; height: calc(var(--x) * 13); }
+    .research-img .credit { top: var(--space-4); bottom: auto; }
+    .research-surface { grid-column: 1 / -1; grid-row: 2; margin: calc(var(--x) * -1) 0 0 var(--x); }
+  }
+</style>

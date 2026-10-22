@@ -1,0 +1,55 @@
+# CI: builds the site and enforces the privacy and size rules on every pull request and on main.
+# - check:external fails if built pages would load anything from another server
+#   (allowlist: privacy.allowlist.json, empty by default).
+# - check:budgets fails if a home/index page exceeds 100 KB JS (gzipped) or 500 KB total
+#   (cover images marked data-budget="cover" excluded); it warns from 90 %.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out (including Git LFS media)
+        uses: actions/checkout@v7
+        with:
+          lfs: true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate content
+        run: npm run validate --if-present
+
+      - name: Build site
+        run: npm run build
+
+      - name: No external requests on page load
+        run: npm run check:external
+
+      - name: Page budgets (JS and total size)
+        run: npm run check:budgets
+
+      - name: Install the test browser (Chromium for Playwright)
+        run: npx playwright install --with-deps chromium
+
+      - name: Tests (accessibility, filters, menu, every Stage format)
+        run: npm test

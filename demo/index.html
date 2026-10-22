@@ -1,3 +1,6 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Creative Science Demo</title>
 <script>document.documentElement.lang = 'de'; document.documentElement.setAttribute('data-fonts', 'fallback');</script>
 <link rel="stylesheet" href="fonts.css">
@@ -5,6 +8,7 @@
 <link rel="stylesheet" href="brand-fonts.css">
 <link rel="stylesheet" href="mockup.css">
 
+<a class="skip-link" href="#inhalt">Zum Inhalt springen</a>
 <header class="wrap nav">
   <div class="brand">
     <div class="logo-ph">HS KL Logo<br>(offizielle Datei)</div>
@@ -13,20 +17,20 @@
   <nav class="navlinks" aria-label="Hauptnavigation">
     <a href="#erlebnisse">Erlebnisse</a>
     <a href="#ueber">Über</a>
-    <span class="lang"><a href="#" aria-current="true" style="text-decoration: underline; text-underline-offset: 0.2em">DE</a> | <a href="#">EN</a></span>
+    <span class="lang"><span lang="de" aria-current="true">DE</span> <span aria-hidden="true">|</span> <span class="lang-off" lang="en">EN<span class="sr-only"> (English version coming soon)</span></span></span>
   </nav>
   <button class="menu-btn" id="menu-open" type="button" aria-expanded="false" aria-controls="menu">Menü</button>
-  <div class="menu" id="menu" role="dialog" aria-label="Menü" hidden>
+  <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menü" hidden>
     <button class="menu-btn" id="menu-close" type="button">Schließen</button>
     <nav aria-label="Hauptnavigation mobil">
       <a href="#erlebnisse">Erlebnisse</a>
       <a href="#ueber">Über</a>
     </nav>
-    <div class="lang" style="font-size: 18px"><a href="#" style="text-decoration: underline">DE</a> | <a href="#">EN</a></div>
+    <span class="lang"><span lang="de" aria-current="true">DE</span> <span aria-hidden="true">|</span> <span class="lang-off" lang="en">EN<span class="sr-only"> (English version coming soon)</span></span></span>
   </div>
 </header>
 
-<main>
+<main id="inhalt" tabindex="-1">
   <section class="wrap" style="padding-top: 16px; padding-bottom: var(--x-3)">
     <div class="overlap">
       <div class="ph home-hero-img">
@@ -34,7 +38,7 @@
         <span class="credit">Foto: Dr. Patrick Jung (@selectedplants)</span>
       </div>
       <div class="surface s-yellow home-hero-surface">
-        <div class="topline">Creative Science · Hochschule Kaiserslautern</div>
+        <p class="topline">Creative Science · Hochschule Kaiserslautern</p>
         <h1 class="d t-display">Forschung erfahrbar machen.</h1>
         <p class="t-lead" style="margin-top: var(--x-half); max-width: 34ch">Studierende im Virtual Design übersetzen echte Forschung in Erlebnisse, die du sehen, hören und betreten kannst.</p>
         <div style="margin-top: var(--x-half)"><a class="btn" href="#erlebnisse">Erlebnisse entdecken <span aria-hidden="true">→</span></a></div>
@@ -44,71 +48,84 @@
 
   <section class="wrap section" aria-labelledby="so">
     <h2 id="so" class="d t-h2" style="margin-bottom: var(--x)">So funktioniert's</h2>
-    <div class="three">
-      <div class="step">
-        <div class="d step-num">01</div>
-        <div class="t-h3">Überblick</div>
+    <ol class="three steps">
+      <li class="step">
+        <span class="d step-num" aria-hidden="true">01</span>
+        <h3 class="t-h3">Überblick</h3>
         <p style="max-width: 36ch">Eine Frage, ein Bild, ein Satz. In fünf Sekunden weißt du, worum es geht.</p>
-      </div>
-      <div class="step">
-        <div class="d step-num">02</div>
-        <div class="t-h3">Erleben</div>
+      </li>
+      <li class="step">
+        <span class="d step-num" aria-hidden="true">02</span>
+        <h3 class="t-h3">Erleben</h3>
         <p style="max-width: 36ch">Video, 3D, VR oder interaktive Bilder. Du entscheidest, wann es losgeht.</p>
-      </div>
-      <div class="step">
-        <div class="d step-num">03</div>
-        <div class="t-h3">Vertiefen</div>
+      </li>
+      <li class="step">
+        <span class="d step-num" aria-hidden="true">03</span>
+        <h3 class="t-h3">Vertiefen</h3>
         <p style="max-width: 36ch">Methode, Forschende, Quellen. So tief, wie du willst.</p>
-      </div>
-    </div>
+      </li>
+    </ol>
   </section>
 
   <section id="erlebnisse" class="wrap section" aria-labelledby="erl">
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: var(--x); margin-bottom: var(--x)">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: var(--x); margin-bottom: var(--x-half)">
       <h2 id="erl" class="d t-h2">Erlebnisse</h2>
       <div class="chips" role="group" aria-label="Nach Format filtern">
-        <button class="chip" type="button" aria-pressed="true">Alle</button>
-        <button class="chip" type="button" aria-pressed="false">Video</button>
-        <button class="chip" type="button" aria-pressed="false">3D</button>
-        <button class="chip" type="button" aria-pressed="false">VR</button>
-        <button class="chip" type="button" aria-pressed="false">Bilder</button>
-        <button class="chip" type="button" aria-pressed="false">Interaktiv</button>
+        <button class="chip" type="button" data-filter="alle" aria-pressed="true">Alle</button>
+        <button class="chip" type="button" data-filter="video" aria-pressed="false">Video</button>
+        <button class="chip" type="button" data-filter="3d" aria-pressed="false">3D</button>
+        <button class="chip" type="button" data-filter="vr" aria-pressed="false">VR</button>
+        <button class="chip" type="button" data-filter="bilder" aria-pressed="false">Bilder</button>
+        <button class="chip" type="button" data-filter="interaktiv" aria-pressed="false">Interaktiv</button>
       </div>
     </div>
+    <p class="t-small filter-status" id="filter-status" role="status"></p>
     <div class="three">
-      <a class="card" href="experience.html">
-        <div class="ph"><img src="img/crust-dark.jpg" alt="Dunkle, rissige Kruste aus der Nähe" width="884" height="1000" loading="lazy"><span class="credit">Foto: Dr. Patrick Jung (@selectedplants)</span></div>
-        <div class="card-meta"><span class="swatch s-green" aria-hidden="true"></span>3D-Modell · 5 Min. · Beispiel</div>
-        <div class="card-title">Leben aus Nebel</div>
+      <article class="card" data-format="3d">
+        <h3 class="card-title"><a class="card-link" href="experience.html">Leben aus Nebel</a></h3>
+        <p class="card-meta"><span class="swatch s-green" aria-hidden="true"></span>3D-Modell · 5 Min. · Beispiel</p>
         <p>Wie eine Flechtenkruste in der Atacama-Wüste vom Nebel lebt.</p>
-      </a>
-      <a class="card" href="#">
-        <div class="ph"><img src="img/lichen-white.jpg" alt="Weiße, gelappte Flechte auf Gestein" width="750" height="1000" loading="lazy"><span class="credit">Foto: Dr. Patrick Jung (@selectedplants)</span></div>
-        <div class="card-meta"><span class="swatch s-blue" aria-hidden="true"></span>Video · 8 Min. · Beispiel</div>
-        <div class="card-title">Kälte als Zuhause</div>
+        <div class="ph">
+        <img src="img/crust-dark.jpg" alt="Dunkle, rissige Kruste aus der Nähe" width="884" height="1000" loading="lazy">
+        <span class="credit">Foto: Dr. Patrick Jung (@selectedplants)</span>
+      </div>
+      </article>
+      <article class="card" data-format="video">
+        <h3 class="card-title"><a class="card-link" href="kaelte-als-zuhause.html">Kälte als Zuhause</a></h3>
+        <p class="card-meta"><span class="swatch s-blue" aria-hidden="true"></span>Video · 8 Min. · Beispiel</p>
         <p>Trebouxia ist Alge des Jahres 2026. Sie versorgt Flechten mit Energie, bis in die Polargebiete.</p>
-      </a>
-      <a class="card" href="#">
-        <div class="ph"><img src="img/cave.jpg" alt="Höhleneingang, die Felswände violett und grün bewachsen" width="750" height="1000" loading="lazy"><span class="credit">Foto: Dr. Patrick Jung (@selectedplants)</span></div>
-        <div class="card-meta"><span class="swatch s-yellow" aria-hidden="true"></span>VR · 12 Min. · Beispiel</div>
-        <div class="card-title">Im Dunkeln wachsen</div>
+        <div class="ph">
+        <img src="img/lichen-white.jpg" alt="Weiße, gelappte Flechte auf Gestein" width="750" height="1000" loading="lazy">
+        <span class="credit">Foto: Dr. Patrick Jung (@selectedplants)</span>
+      </div>
+      </article>
+      <article class="card" data-format="vr">
+        <h3 class="card-title"><a class="card-link" href="im-dunkeln-wachsen.html">Im Dunkeln wachsen</a></h3>
+        <p class="card-meta"><span class="swatch s-yellow" aria-hidden="true"></span>VR · 12 Min. · Beispiel</p>
         <p>Ein Besuch bei Mikroorganismen, die in Höhlen leben.</p>
-      </a>
+        <div class="ph">
+        <img src="img/cave.jpg" alt="Höhleneingang, die Felswände violett und grün bewachsen" width="750" height="1000" loading="lazy">
+        <span class="credit">Foto: Dr. Patrick Jung (@selectedplants)</span>
+      </div>
+      </article>
     </div>
   </section>
 
   <section id="ueber" class="wrap section-lg" aria-labelledby="forschung">
     <div class="overlap">
-      <div class="ph split-img"><img src="img/lab-cultures.jpg" alt="Laborflaschen mit grünen Algenkulturen" width="1157" height="1400" loading="lazy"><span class="credit">Foto: Dr. Patrick Jung (@selectedplants)</span></div>
+      <div class="ph split-img">
+        <img src="img/lab-cultures.jpg" alt="Laborflaschen mit grünen Algenkulturen" width="1157" height="1400" loading="lazy">
+        <span class="credit">Foto: Dr. Patrick Jung (@selectedplants)</span>
+      </div>
       <div class="surface s-green split-surface">
-        <div class="topline">Die Forschung</div>
+        <p class="topline">Die Forschung</p>
         <h2 id="forschung" class="d d-u t-h2">Winzig, aber mächtig.</h2>
         <p style="max-width: 52ch">Das XCEL – Extreme Cryptogam Ecology Lab an der HS Kaiserslautern erforscht Cyanobakterien, Grünalgen und Flechten an extremen Orten: an beiden Polen, in der Atacama-Wüste und in Höhlen.</p>
         <blockquote class="stack" style="margin: 0; gap: var(--space-2)">
           <p class="t-lead" lang="en" style="font-weight: 500; max-width: none">“My research is driven by the question on how these microorganisms can influence ecosystems from their micro niche to the landscape scale.”</p>
           <p class="t-small"><strong>Dr. Patrick Jung</strong>, auf selectedplants.de</p>
         </blockquote>
-        <div style="margin-top: 8px"><a class="cta" href="https://www.selectedplants.de/">Mehr über das Labor <span aria-hidden="true">↗</span></a></div>
+        <div style="margin-top: 8px"><a class="cta" href="https://www.selectedplants.de/">Mehr über das Labor <span aria-hidden="true">↗</span><span class="sr-only"> (externe Seite)</span></a></div>
       </div>
     </div>
   </section>
@@ -124,16 +141,16 @@
     </ul>
     <div class="stack footer-text">
       <p style="font-size: 16px">Ein Projekt im Studiengang Virtual Design, Hochschule Kaiserslautern. Teil von Heritomics.</p>
-      <p class="t-small">Forschungsinhalte, Zitate und Fotos: Dr. Patrick Jung, XCEL Lab. <a href="https://www.selectedplants.de/">selectedplants.de <span aria-hidden="true">↗</span></a> · <a href="https://www.instagram.com/selectedplants/">@selectedplants <span aria-hidden="true">↗</span></a></p>
+      <p class="t-small">Forschungsinhalte, Zitate und Fotos: Dr. Patrick Jung, XCEL Lab. <a href="https://www.selectedplants.de/">selectedplants.de <span aria-hidden="true">↗</span><span class="sr-only"> (externe Seite)</span></a> · <a href="https://www.instagram.com/selectedplants/">@selectedplants <span aria-hidden="true">↗</span><span class="sr-only"> (externe Seite)</span></a></p>
     </div>
     <nav class="footer-legal" aria-label="Rechtliches">
-      <a href="#">Impressum</a>
-      <a href="#">Datenschutz</a>
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
     </nav>
   </div>
 </footer>
 
-<div class="mock-tools" aria-label="Mockup-Werkzeug">
+<aside class="mock-tools" aria-label="Mockup-Werkzeug">
   <label>Schrift
     <select id="font-mode">
       <option value="fallback">Fallback (Poppins)</option>
@@ -141,6 +158,6 @@
       <option value="brand">Marke: Stratos/Matter (nur lokal)</option>
     </select>
   </label>
-</div>
+</aside>
 
 <script src="mockup.js"></script>

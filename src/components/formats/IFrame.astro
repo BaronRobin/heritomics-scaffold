@@ -1,0 +1,88 @@
+---
+// Format "iframe": a self-contained build in public/ (Unity WebGL, TouchDesigner export) or an Unreal
+// Pixel Streaming URL. Nothing loads before the click (docs/PRIVACY.md): the page holds no <iframe> and
+// no external URL in a loading attribute. The address sits in the JSON config below, and
+// src/scripts/formats/iframe.ts creates the <iframe> on Start and removes it on Stop.
+// The <template> is copied into the Stage on Start; it holds the offline message and fallback link.
+import { t } from '../../i18n/ui';
+import { asset, type Lang } from '../../i18n/routes';
+import { embedText, type LocalProject } from '../../lib/projects';
+
+interface Props { project: LocalProject; lang: Lang }
+const { project, lang } = Astro.props;
+const d = project.entry.data;
+if (d.format !== 'iframe') throw new Error(`IFrame.astro: project "${project.slug}" is not format: iframe`);
+const embed = d.embed;
+
+// Accessible name of the frame: the project's description of what people see or do
+const title = embedText(project, lang, 'description', embed.description) ?? { text: t(lang, 'iframe.title'), lang };
+const otherLang = (l: Lang) => (l !== lang ? l : undefined);
+
+// Offline fallback (Pixel Streaming only): a file in public/, e.g. "media/walkthrough.mp4", or a full URL
+const isUrl = (s: string) => /^([a-z][a-z0-9+.-]*:|\/\/)/i.test(s);
+const fallback = embed.kind === 'pixelstreaming' && embed.offline ? {
+  href: isUrl(embed.offline.url) ? embed.offline.url : asset(embed.offline.url),
+  external: /^(https?:)?\/\//i.test(embed.offline.url),
+  // A custom label exists only in index.mdx, so it is German
+  label: embed.offline.label ? { text: embed.offline.label, lang: 'de' as Lang } : { text: t(lang, 'iframe.offlineAlt'), lang },
+} : undefined;
+// [Not in src/i18n/ui.ts yet: candidate key "iframe.notStarting"]
+const notStarting = lang === 'de' ? 'Stream startet nicht?' : 'Stream not starting?';
+
+const config = embed.kind === 'build'
+  ? { kind: 'build', src: asset(embed.src), title: title.text, titleLang: title.lang }
+  : { kind: 'pixelstreaming', url: embed.url, title: title.text, titleLang: title.lang };
+---
+<script is:inline type="application/json" data-stage-config set:html={JSON.stringify(config)} />
+<template data-stage-template>
+  <div class="iframe-root">
+    <div class="iframe-view" data-iframe-view>
+      {embed.kind === 'pixelstreaming' && <div class="iframe-offline" data-iframe-offline role="status"></div>}
+    </div>
+    {fallback && (
+      <p class="iframe-help" data-iframe-help hidden>
+        {`${notStarting} `}<a href={fallback.href} lang={otherLang(fallback.label.lang)}>{fallback.label.text}{fallback.external
+          ? <><span aria-hidden="true">{'\u00a0↗'}</span><span class="sr-only"> {t(lang, 'link.external')}</span></>
+          : <span aria-hidden="true">{'\u00a0→'}</span>}</a>
+      </p>
+    )}
+  </div>
+  {embed.kind === 'pixelstreaming' && (
+    <template data-iframe-offline-content>
+      <p>{t(lang, 'iframe.offline')}</p>
+      {fallback && (
+        <a class="cta" href={fallback.href} lang={otherLang(fallback.label.lang)}>{fallback.label.text}{fallback.external
+          ? <><span aria-hidden="true">{'\u00a0↗'}</span><span class="sr-only"> {t(lang, 'link.external')}</span></>
+          : <span aria-hidden="true">{'\u00a0→'}</span>}</a>
+      )}
+    </template>
+  )}
+</template>
+
+<style is:global>
+  [data-stage][data-format="iframe"] .iframe-root { position: absolute; inset: 0; display: flex; flex-direction: column; }
+  [data-stage][data-format="iframe"] .iframe-view { position: relative; flex: 1; min-height: 0; container-type: size; }
+  [data-stage][data-format="iframe"] .iframe-view iframe {
+    position: absolute; inset: 0; display: block; width: 100%; height: 100%; border: 0; background: var(--stage-bg);
+  }
+  /* Focus sits inside the frame: a white ring on its inner edge, so it also shows in fullscreen */
+  [data-stage][data-format="iframe"] .iframe-view iframe:focus-visible {
+    outline: var(--focus-width) solid var(--focus-halo); outline-offset: calc(var(--focus-width) * -1); box-shadow: none;
+  }
+  [data-stage][data-format="iframe"] .iframe-offline:not(:empty) {
+    position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: var(--space-3); text-align: center; background: var(--stage-bg); color: var(--stage-text);
+    /* Clear of the Stage's fullscreen button (top right, 2.75rem touch target) on both sides, so it stays centered */
+    padding: var(--space-4) calc(var(--space-3) * 2 + 2.75rem);
+  }
+  @container (max-width: 30rem) {
+    [data-stage][data-format="iframe"] .iframe-offline { font-size: var(--type-small); line-height: var(--lh-small); }
+  }
+  [data-stage][data-format="iframe"] .iframe-help {
+    padding: 0 var(--space-3); border-top: var(--rule-width) solid var(--color-white);
+    font-size: var(--type-small); line-height: var(--lh-small); color: var(--stage-text);
+  }
+  [data-stage][data-format="iframe"] .iframe-help a { display: inline-block; padding-block: var(--space-1); font-weight: 700; }
+  [data-stage][data-format="iframe"] .iframe-root a { color: var(--stage-text); text-underline-offset: 0.2em; }
+  [data-stage][data-format="iframe"] .iframe-root a:hover { text-decoration-thickness: 3px; }
+</style>

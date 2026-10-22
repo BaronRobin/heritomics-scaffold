@@ -1,0 +1,18 @@
+---
+// DE | EN. The current language is plain text; the other one links to the same page in that language.
+import { path, languages, langs, type Lang, type RouteKey } from '../i18n/routes';
+import { t } from '../i18n/ui';
+
+interface Props { lang: Lang; routeKey: RouteKey; slug?: string }
+const { lang, routeKey, slug } = Astro.props;
+---
+<span class="lang" role="group" aria-label={t(lang, 'lang.label')}>
+  {langs.map((l, i) => (
+    <Fragment>
+      {i > 0 && <span aria-hidden="true">|</span>}
+      {l === lang
+        ? <span lang={l} aria-current="true">{l.toUpperCase()}</span>
+        : <a href={path(l, routeKey, slug)} lang={l} hreflang={l}>{l.toUpperCase()}<span class="sr-only"> – {languages[l]}</span></a>}
+    </Fragment>
+  ))}
+</span>

@@ -1,0 +1,150 @@
+<!doctype html>
+<!--
+  SAMPLE BUILD: stands in for a Unity WebGL or TouchDesigner export (format "iframe", kind "build").
+  A real export replaces this whole folder: public/builds/<your-project>/index.html plus its files.
+  The hub shows it in a sandboxed <iframe> (scripts and pointer lock only, no same-origin access),
+  created only after the visitor clicks "Start". Everything here is inline: no external requests,
+  no storage, no cookies (docs/PRIVACY.md). The CSP below enforces that for this sample.
+  Colors mirror src/styles/tokens.css (a build can't read the hub's CSS).
+-->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'">
+<title>Beispiel-Build</title>
+<style>
+  :root {
+    --white: #ffffff; --black: #000000; --yellow: #f3f707; --green: #d2f2e1;
+    --pad: 0.5rem; --font: Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    display: flex; flex-direction: column; background: var(--black); color: var(--white);
+    font-family: var(--font); font-size: clamp(0.75rem, 2.2vw, 1rem); line-height: 1.4; overflow: hidden;
+  }
+  header, footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 var(--pad); padding: var(--pad) calc(var(--pad) * 2); }
+  header { padding-right: 3.5rem; } /* room for the hub's fullscreen button */
+  p { margin: 0; }
+  canvas { flex: 1; min-height: 0; width: 100%; display: block; touch-action: manipulation; cursor: pointer; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  /* Small frames (phones): one line of text, so the grid keeps a usable size. The Stage text says how to play. */
+  @media (max-width: 480px), (max-height: 260px) {
+    header { flex-wrap: nowrap; white-space: nowrap; }
+    header [lang="en"] { display: none; }
+    footer { display: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <p><strong>[Beispiel-Build]</strong><span lang="en"> [Sample build]</span></p>
+  <p><span id="count">0 / 40</span> <span aria-hidden="true">aktiv<span lang="en"> · active</span></span></p>
+</header>
+<canvas id="grid" aria-hidden="true"></canvas>
+<footer>
+  <p>Klicken oder Pfeiltasten + Leertaste</p>
+  <p lang="en">Click, or arrow keys + Space</p>
+</footer>
+<p id="live" class="sr-only" aria-live="polite"></p>
+<script>
+  // A grid of 8 × 5 fields. Click or tap a field, or move with the arrow keys and press Space or
+  // Enter, to switch it on or off. Redraws only on input: no animation loop.
+  const COLS = 8, ROWS = 5;
+  const on = new Array(COLS * ROWS).fill(false);
+  const canvas = document.getElementById('grid');
+  const ctx = canvas.getContext('2d');
+  const count = document.getElementById('count');
+  const live = document.getElementById('live');
+  const css = getComputedStyle(document.documentElement);
+  const color = (name) => css.getPropertyValue(name).trim();
+  let cursor = 0;
+  let focused = document.hasFocus();
+  let layout = { size: 0, x: 0, y: 0 };
+
+  function resize() {
+    const ratio = window.devicePixelRatio || 1;
+    const { width, height } = canvas.getBoundingClientRect();
+    canvas.width = Math.round(width * ratio);
+    canvas.height = Math.round(height * ratio);
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    const size = Math.floor(Math.min((width - 16) / COLS, (height - 16) / ROWS));
+    layout = { size, x: Math.round((width - size * COLS) / 2), y: Math.round((height - size * ROWS) / 2) };
+    draw();
+  }
+
+  function draw() {
+    const { size, x, y } = layout;
+    const { width, height } = canvas.getBoundingClientRect();
+    ctx.fillStyle = color('--black');
+    ctx.fillRect(0, 0, width, height);
+    const gap = Math.max(2, Math.round(size * 0.12));
+    on.forEach((active, i) => {
+      const cx = x + (i % COLS) * size + gap / 2;
+      const cy = y + Math.floor(i / COLS) * size + gap / 2;
+      const s = size - gap;
+      if (active) {
+        ctx.fillStyle = color('--green');
+        ctx.fillRect(cx, cy, s, s);
+      } else {
+        ctx.strokeStyle = color('--white');
+        ctx.lineWidth = 1;
+        ctx.strokeRect(cx + 0.5, cy + 0.5, s - 1, s - 1);
+      }
+    });
+    // Keyboard cursor and focus frame: only while this build has keyboard focus
+    if (focused) {
+      const i = cursor;
+      ctx.strokeStyle = color('--yellow');
+      ctx.lineWidth = 3;
+      ctx.strokeRect(x + (i % COLS) * size + 1.5, y + Math.floor(i / COLS) * size + 1.5, size - 3, size - 3);
+    }
+    count.textContent = `${on.filter(Boolean).length} / ${on.length}`;
+  }
+
+  function describe(i) {
+    return `Feld ${(i % COLS) + 1}, ${Math.floor(i / COLS) + 1}: ${on[i] ? 'an' : 'aus'}. ${on.filter(Boolean).length} von ${on.length} an.`;
+  }
+
+  function toggle(i) {
+    on[i] = !on[i];
+    cursor = i;
+    draw();
+    live.textContent = describe(i);
+  }
+
+  canvas.addEventListener('pointerdown', (event) => {
+    const { size, x, y } = layout;
+    const rect = canvas.getBoundingClientRect();
+    const col = Math.floor((event.clientX - rect.left - x) / size);
+    const row = Math.floor((event.clientY - rect.top - y) / size);
+    if (col >= 0 && col < COLS && row >= 0 && row < ROWS) toggle(row * COLS + col);
+  });
+
+  // Arrow keys move, Space and Enter switch. Tab and Escape are never captured,
+  // so keyboard users can always leave the build (WCAG 2.1.2, no keyboard trap).
+  window.addEventListener('keydown', (event) => {
+    const moves = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -COLS, ArrowDown: COLS };
+    if (event.key in moves) {
+      const col = cursor % COLS;
+      if ((event.key === 'ArrowLeft' && col === 0) || (event.key === 'ArrowRight' && col === COLS - 1)) return;
+      const next = cursor + moves[event.key];
+      if (next < 0 || next >= on.length) return;
+      event.preventDefault();
+      cursor = next;
+      draw();
+      live.textContent = describe(cursor);
+    } else if (event.key === ' ' || event.key === 'Enter') {
+      event.preventDefault();
+      toggle(cursor);
+    }
+  });
+
+  window.addEventListener('focus', () => { focused = true; draw(); });
+  window.addEventListener('blur', () => { focused = false; draw(); });
+  window.addEventListener('resize', resize);
+  resize();
+</script>
+</body>
+</html>

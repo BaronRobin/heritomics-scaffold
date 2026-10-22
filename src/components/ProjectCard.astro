@@ -1,0 +1,75 @@
+---
+// Experience card (DESIGN.md 7.5), used on the home page and the experiences index.
+// DOM order is title → meta → hook → image, so screen readers hear the title first;
+// CSS `order` shows the image first. The title link's ::after covers the whole card.
+// Duplex stays on the detail hero only (DESIGN.md 5.3: at most one duplex image per screen).
+// data-field / data-format / data-group carry the canonical (German frontmatter) values for filters.
+import { Picture } from 'astro:assets';
+import { t, type UIKey } from '../i18n/ui';
+import { path, type Lang } from '../i18n/routes';
+import type { LocalProject, Text } from '../lib/projects';
+
+interface Props {
+  project: LocalProject;
+  lang: Lang;
+  /** Heading level of the card title; match the page outline (default 3, under an h2 section) */
+  headingLevel?: 2 | 3 | 4;
+}
+const { project, lang, headingLevel = 3 } = Astro.props;
+const d = project.entry.data;
+const Heading = `h${headingLevel}` as 'h2' | 'h3' | 'h4';
+/** lang attribute only where the text is not in the page language (e.g. German fallback on /en/) */
+const langOf = (text: Text) => (text.lang !== lang ? text.lang : undefined);
+---
+<article class="card" data-field={d.field} data-format={d.format} data-group={d.group}>
+  <Heading class="card-title" lang={langOf(project.title)}>
+    <a class="card-link" href={path(lang, 'experiences', project.slug)}>{project.title.text}</a>
+  </Heading>
+  <p class="card-meta">
+    <span class={`swatch s-${d.surface}`} aria-hidden="true"></span>
+    <span>{t(lang, `format.${d.format}` as UIKey)}</span>
+    <span aria-hidden="true">·</span>
+    <span>{t(lang, 'duration.min', { n: d.durationMinutes })}</span>
+    {d.example && (
+      <>
+        <span aria-hidden="true">·</span>
+        <span>{t(lang, 'card.example')}</span>
+      </>
+    )}
+  </p>
+  <p class="card-hook" lang={langOf(project.hook)}>{project.hook.text}</p>
+  <div class="frame card-frame">
+    <Picture
+      src={d.cover}
+      formats={['avif', 'webp']}
+      widths={[480, 800, 1200]}
+      sizes="(max-width: 900px) 100vw, 33vw"
+      alt={project.coverAlt.text}
+      lang={langOf(project.coverAlt)}
+      loading="lazy"
+      decoding="async"
+      style={`object-position: ${d.coverFocus}`}
+      pictureAttributes={{ 'data-budget': 'cover' }}
+    />
+    <p class="credit">{t(lang, 'photo.credit')}: {d.coverCredit}</p>
+  </div>
+</article>
+
+<style>
+  .card { position: relative; display: flex; flex-direction: column; gap: var(--x-half); }
+  .card-frame { order: -2; aspect-ratio: 4 / 5; }
+  .card-meta { order: -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-size: var(--type-small); line-height: var(--lh-small); font-weight: 700; }
+  .swatch { flex-shrink: 0; width: var(--space-3); height: var(--space-3); outline: var(--rule-width) solid var(--rule); }
+  .card-title { font-size: var(--type-h3); font-weight: 600; line-height: var(--lh-heading); }
+  .card-link { color: inherit; text-decoration: none; }
+  .card-link::after { content: ""; position: absolute; inset: 0; z-index: 2; }
+
+  /* Hover and focus: the image shifts a little, the title gets an underline. No shadows, no lift. */
+  .card:hover .card-frame { transform: translate(var(--space-1), calc(var(--space-1) * -1)); }
+  .card:hover .card-link,
+  .card-link:focus-visible { text-decoration: underline; text-decoration-thickness: calc(var(--rule-width) * 3); text-underline-offset: 0.2em; }
+
+  /* The focus ring goes around the whole card (the link's ::after), same ring as everywhere (DESIGN.md 7.3) */
+  .card-link:focus-visible { outline: none; box-shadow: none; }
+  .card-link:focus-visible::after { outline: var(--focus-width) solid var(--focus); outline-offset: 2px; box-shadow: 0 0 0 2px var(--focus-halo); }
+</style>

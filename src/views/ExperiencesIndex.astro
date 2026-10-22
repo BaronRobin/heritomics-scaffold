@@ -1,0 +1,98 @@
+---
+// Experiences index (brief: Information architecture 2): every listed project, filterable by
+// research field, format and group. Without JavaScript all cards show and the filters stay hidden.
+import ProjectCard from '../components/ProjectCard.astro';
+import { t, type UIKey } from '../i18n/ui';
+import type { Lang } from '../i18n/routes';
+import { getProjects } from '../lib/projects';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const projects = await getProjects(lang);
+
+type Option = { value: string; label: string; lang?: string };
+const unique = (options: Option[]) => [...new Map(options.map((o) => [o.value, o])).values()];
+const filters = [
+  { key: 'field', label: t(lang, 'filter.field'),
+    options: unique(projects.map((p) => ({ value: p.entry.data.field, label: p.field.text, lang: p.field.lang !== lang ? p.field.lang : undefined }))) },
+  { key: 'format', label: t(lang, 'filter.format'),
+    options: unique(projects.map((p) => ({ value: p.entry.data.format, label: t(lang, `format.${p.entry.data.format}` as UIKey) }))) },
+  { key: 'group', label: t(lang, 'filter.group'),
+    options: unique(projects.map((p) => ({ value: p.entry.data.group, label: p.entry.data.group }))) },
+];
+---
+<section class="wrap section" aria-labelledby="index-title">
+  <h1 id="index-title" class="d t-h1">{t(lang, 'index.title')}</h1>
+  <p class="t-lead lead">{t(lang, 'index.lead')}</p>
+
+  <div class="filters" data-filters hidden>
+    {filters.map((f) => (
+      <div class="filter-row">
+        <span class="filter-label" id={`filter-${f.key}`}>{f.label}</span>
+        <div class="chips" role="group" aria-labelledby={`filter-${f.key}`} data-filter={f.key}>
+          <button class="chip" type="button" data-value="" aria-pressed="true">{t(lang, 'filter.all')}</button>
+          {f.options.map((o) => <button class="chip" type="button" data-value={o.value} aria-pressed="false" lang={o.lang}>{o.label}</button>)}
+        </div>
+      </div>
+    ))}
+    <button class="cta reset" type="button" data-filter-reset>{t(lang, 'filter.reset')}</button>
+  </div>
+
+  <p class="t-small status" role="status" data-filter-status
+    data-one={t(lang, 'filter.count.one')} data-many={t(lang, 'filter.count.many')} data-none={t(lang, 'filter.none')}></p>
+
+  <ul class="three plain-list">
+    {projects.map((p) => <li data-card><ProjectCard project={p} lang={lang} headingLevel={2} /></li>)}
+  </ul>
+</section>
+
+<script>
+  // Filters: one choice per row ("All" or a value); a card shows when it matches every row.
+  const panel = document.querySelector<HTMLElement>('[data-filters]');
+  const status = document.querySelector<HTMLElement>('[data-filter-status]');
+  if (panel && status) {
+    panel.hidden = false;
+    const items = [...document.querySelectorAll<HTMLElement>('[data-card]')];
+    const groups = [...panel.querySelectorAll<HTMLElement>('[data-filter]')];
+    const state: Record<string, string> = {};
+
+    const apply = () => {
+      let shown = 0;
+      for (const item of items) {
+        const card = item.querySelector<HTMLElement>('article')!;
+        const match = Object.entries(state).every(([key, value]) => !value || card.dataset[key] === value);
+        item.hidden = !match;
+        if (match) shown++;
+      }
+      status.textContent = shown === 0 ? status.dataset.none!
+        : shown === 1 ? status.dataset.one! : status.dataset.many!.replace('{n}', String(shown));
+    };
+
+    const select = (group: HTMLElement, button: HTMLButtonElement) => {
+      group.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+      state[group.dataset.filter!] = button.dataset.value ?? '';
+    };
+
+    for (const group of groups) {
+      group.addEventListener('click', (e) => {
+        const button = (e.target as Element).closest('button');
+        if (!button) return;
+        select(group, button);
+        apply();
+      });
+    }
+    panel.querySelector('[data-filter-reset]')?.addEventListener('click', () => {
+      for (const group of groups) select(group, group.querySelector('button')!);
+      apply();
+    });
+  }
+</script>
+
+<style>
+  .lead { max-width: var(--measure); margin-top: var(--x-half); }
+  .filters { display: flex; flex-direction: column; align-items: flex-start; gap: var(--x-half); margin-top: var(--x); padding-block: var(--x-half); border-block: var(--rule-width) solid var(--rule); }
+  .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--x-half); }
+  .filter-label { font-size: var(--type-small); font-weight: 700; min-width: 9em; }
+  .reset { background: none; border: 0; padding: var(--space-3) 0; font: inherit; font-weight: 700; cursor: pointer; color: var(--text); }
+  .status { min-height: 1.45em; margin-block: var(--x-half); }
+</style>
