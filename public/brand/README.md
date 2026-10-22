@@ -7,11 +7,11 @@ Never draw, trace, recolor or approximate a logo (docs/DESIGN.md 0.6 and 2). Use
 
 | File | What it is | Where it appears | Status |
 |---|---|---|---|
-| `hskl-logo-black.svg` | Combined logo (Wort-Bild-Marke), black | Header, on white | missing: the header shows a placeholder |
-| `hskl-logo-white.png` | Combined logo, white on black, 576 × 300 px | Footer, on black | stand-in: a web image thumbnail. Replace it with the official SVG |
+| `hskl-logo-black.svg` | Combined logo (Wort-Bild-Marke), black | Header, on white | copied from the guideline (see below) |
+| `hskl-logo-white.svg` | Combined logo, white | Footer, on black | copied from the guideline (see below) |
 | `hskl-mark-black.svg` | Shortened mark (verkürzte Bildmarke), black | Favicon | missing |
 
-Get the official files from the HS KL press office. When the white SVG arrives, save it as `hskl-logo-white.svg`, delete the PNG and change the HS KL entry in `src/lib/partners.ts`.
+Both logo files are stand-ins: the vector paths of the two logos on page 7 ("Logo Farbigkeit") of the HS KL Corporate Design Guideline (2025-12-12), copied unchanged (same coordinates, same color), without any redrawing. A pixel comparison with the PDF found no missing or extra shapes. The white one has the same shapes as the black one. Replace both with the official files from the HS KL press office when they arrive (same file names; nothing else to change).
 
 ## Partners (`partners/`)
 

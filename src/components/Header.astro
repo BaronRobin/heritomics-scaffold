@@ -1,5 +1,5 @@
 ---
-// Site header (DESIGN.md 7.1): logo placeholder, hub name, main navigation, language toggle.
+// Site header (DESIGN.md 7.1): HS KL logo, hub name, main navigation, language toggle.
 // On phones the navigation moves into a full-screen yellow <dialog>.
 import { t } from '../i18n/ui';
 import { existsSync } from 'node:fs';
@@ -19,7 +19,7 @@ const links = [
 ---
 <header class="wrap nav">
   <div class="brand">
-    {logo ? <img class="logo" src={logo} alt="Hochschule Kaiserslautern" /> : <div class="placeholder logo">{t(lang, 'logo.hskl')}</div>}
+    {logo ? <img class="logo" src={logo} width="235" height="102" alt="Hochschule Kaiserslautern" /> : <div class="placeholder logo">{t(lang, 'logo.hskl')}</div>}
     <a class="d brand-name" href={path(lang, 'home')}>{t(lang, 'site.name')}</a>
   </div>
   <nav class="navlinks" aria-label={t(lang, 'nav.main')}>

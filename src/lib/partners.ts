@@ -16,9 +16,9 @@ export interface Partner {
 
 export const partners: Partner[] = [
   {
-    // Stand-in until the official SVG arrives from the HS KL press office (public/brand/README.md)
+    // Copied from the CD guideline until the press office sends the official files (public/brand/README.md)
     name: 'Hochschule Kaiserslautern',
-    logo: { file: 'brand/hskl-logo-white.png', width: 576, height: 300 },
+    logo: { file: 'brand/hskl-logo-white.svg', width: 235, height: 102 },
     tile: false,
   },
   {

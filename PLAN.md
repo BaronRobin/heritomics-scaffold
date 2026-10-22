@@ -81,7 +81,7 @@ Jobs 2–5 come first, because everything else imports their layout, styles, i18
 
 - Patrick Jung: captions for the microscopy images, check of every scientific sentence, OK for using his photos
 - Groups: names, "Gestaltung" texts, their actual experiences
-- HS KL press office: official logo files. The footer uses a web thumbnail as a stand-in; the header and favicon still need the black files (see `public/brand/README.md`)
+- HS KL press office: official logo files. Header and footer use the logos copied from the CD guideline as stand-ins; the favicon mark is still missing (see `public/brand/README.md`)
 - Course team: confirm the partner list in `src/lib/partners.ts` (HS KL, BIOPOLIS, CIBIO, Università di Bologna) and that each partner OKs its logo; font license confirmation
 - Whoever runs a Pixel Streaming server: its name for the notice, and whether it uses a third-party STUN/TURN server (see `docs/PRIVACY.md`)
 - Team decision: Git LFS for large media, as recommended in `docs/MEDIA.md` (needs a `.gitattributes` and `git lfs` on every laptop)
