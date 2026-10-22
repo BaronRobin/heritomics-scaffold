@@ -1,0 +1,58 @@
+---
+// Format "webxr" (src/scripts/formats/webxr.ts). Contract: src/scripts/stage-types.ts.
+// inline: a 3D view everyone can use, plus "Enter VR" where the browser supports immersive VR.
+// external: a link to a standalone VR build (e.g. a Meta Quest app); nothing loads on this page.
+// The Stage shows the motion notice before start (DESIGN.md 10).
+import ExternalLink from '../ExternalLink.astro';
+import { t } from '../../i18n/ui';
+import { asset, type Lang } from '../../i18n/routes';
+import { embedText, type LocalProject } from '../../lib/projects';
+
+interface Props { project: LocalProject; lang: Lang }
+const { project, lang } = Astro.props;
+const d = project.entry.data;
+if (d.format !== 'webxr') throw new Error(`WebXR.astro needs format "webxr", got "${d.format}"`);
+
+const embed = d.embed;
+const description = embedText(project, lang, 'description', embed.description)!;
+const title = project.stage?.title ?? project.title;
+const id = `xr-${project.slug}`;
+const config = {
+  mode: embed.mode,
+  src: embed.mode === 'inline' ? asset(embed.scene) : undefined,
+  labelEnter: t(lang, 'xr.enter'),
+  labelExit: t(lang, 'xr.exit'),
+};
+const otherLang = (l: Lang) => (l !== lang ? l : undefined);
+---
+<script is:inline type="application/json" data-stage-config set:html={JSON.stringify(config)} />
+<template data-stage-template>
+  {embed.mode === 'inline' ? (
+    <div class="xr">
+      <div class="xr-view" data-xr-view data-label={`${t(lang, 'format.webxr')}: ${title.text}`} data-describedby={`${id}-desc ${id}-help`}></div>
+      <div class="xr-bar">
+        <button class="btn btn-y" type="button" data-xr-enter hidden>{t(lang, 'xr.enter')}</button>
+        <button class="btn-o" type="button" data-xr-reset>{t(lang, 'model.reset')}</button>
+        <p class="t-small" data-xr-unsupported hidden>{t(lang, 'xr.unsupported')}</p>
+        <p class="t-small xr-help" id={`${id}-help`}>{t(lang, 'model.help')}</p>
+      </div>
+      <p id={`${id}-desc`} lang={otherLang(description.lang)} hidden>{description.text}</p>
+    </div>
+  ) : (
+    <div class="xr xr-external">
+      <p lang={otherLang(description.lang)}>{description.text}</p>
+      <p class="t-small">{embed.platform}</p>
+      <ExternalLink href={embed.url} lang={lang} class="btn btn-y">{t(lang, 'xr.external')}</ExternalLink>
+    </div>
+  )}
+</template>
+
+<style is:global>
+  [data-stage][data-format="webxr"] .xr { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--stage-bg); color: var(--stage-text); }
+  [data-stage][data-format="webxr"] .xr-view { position: relative; flex: 1 1 auto; min-height: 0; }
+  [data-stage][data-format="webxr"] .xr-view canvas:focus-visible { outline-offset: calc(var(--focus-width) * -1); box-shadow: none; }
+  [data-stage][data-format="webxr"] .xr-bar { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); padding: var(--space-2) var(--space-3); border-top: var(--rule-width) solid var(--stage-text); }
+  [data-stage][data-format="webxr"] .xr-bar .t-small { flex: 1 1 12em; margin: 0; }
+  [data-stage][data-format="webxr"] .xr-external { align-items: flex-start; justify-content: center; gap: var(--x-half); padding: var(--x); }
+  [data-stage][data-format="webxr"] .xr-external .btn-y { color: var(--color-black); }
+</style>

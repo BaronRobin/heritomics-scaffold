@@ -1,0 +1,53 @@
+---
+// The one embed component (brief: "Embed system"). Picks the format component for project.format and
+// puts it on the shared Stage. Adding a format = one component here + one schema option in
+// src/content.config.ts + one loader in src/scripts/stage.ts (see docs/EMBEDS.md).
+import { statSync } from 'node:fs';
+import { join } from 'node:path';
+import Stage from './Stage.astro';
+import Video from './formats/Video.astro';
+import Images from './formats/Images.astro';
+import Model3D from './formats/Model3D.astro';
+import Splat from './formats/Splat.astro';
+import Canvas from './formats/Canvas.astro';
+import WebXR from './formats/WebXR.astro';
+import IFrame from './formats/IFrame.astro';
+import type { Lang } from '../i18n/routes';
+import type { LocalProject } from '../lib/projects';
+
+interface Props { project: LocalProject; lang: Lang; anchor?: string }
+const { project, lang, anchor } = Astro.props;
+const d = project.entry.data;
+
+const formats = { video: Video, images: Images, model3d: Model3D, splat: Splat, canvas: Canvas, webxr: WebXR, iframe: IFrame };
+const Format = formats[d.format];
+
+// Aspect ratio of the running experience, external service for the notice, main file for the size note
+let aspect = '16 / 9';
+let service: string | undefined;
+let mainFile: string | undefined;
+if (d.format === 'video') {
+  if ('sources' in d.embed) { aspect = `${d.embed.width} / ${d.embed.height}`; mainFile = d.embed.sources[0].src; }
+  else service = d.embed.provider === 'youtube' ? 'YouTube (youtube-nocookie.com)' : 'Vimeo';
+} else if (d.format === 'canvas') {
+  aspect = d.embed.aspect;
+} else if (d.format === 'iframe') {
+  aspect = d.embed.aspect;
+  if (d.embed.kind === 'pixelstreaming') service = d.embed.service;
+} else if (d.format === 'model3d' || d.format === 'splat') {
+  mainFile = d.embed.src;
+} else if (d.format === 'webxr' && d.embed.mode === 'inline') {
+  mainFile = d.embed.scene;
+}
+
+let size: string | undefined;
+if (mainFile) {
+  try {
+    const mb = statSync(join(process.cwd(), 'public', mainFile)).size / 1e6;
+    size = `${new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-GB', { maximumFractionDigits: 1 }).format(Math.max(mb, 0.1))} MB`;
+  } catch { /* file missing: `npm run validate` reports it */ }
+}
+---
+<Stage project={project} lang={lang} aspect={aspect} service={service} size={size} anchor={anchor}>
+  <Format project={project} lang={lang} />
+</Stage>

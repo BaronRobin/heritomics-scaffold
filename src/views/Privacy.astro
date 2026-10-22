@@ -1,0 +1,84 @@
+---
+// Datenschutz / Privacy. A PLACEHOLDER for the official HS Kaiserslautern privacy policy
+// (docs/PRIVACY.md): never write legal text here. Everything in [brackets] waits for the
+// official wording. The list "Was diese Website technisch tut" only states facts about the
+// page code. Keep it true: update it whenever the site starts doing something new.
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/routes';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+const copy = {
+  de: {
+    notice: 'Hier steht später die offizielle Datenschutzerklärung der Hochschule Kaiserslautern. Der Abschnitt „Was diese Website technisch tut“ beschreibt nur den Seitencode und ist kein Rechtstext.',
+    technical: 'Was diese Website technisch tut',
+    facts: [
+      'Der Seitencode setzt keine Cookies.',
+      'Es gibt keine Analyse- oder Tracking-Dienste.',
+      'Im Browser wird nichts gespeichert, weder in localStorage noch in sessionStorage oder IndexedDB.',
+      'Schriften, Bilder, Videos und 3D-Dateien kommen von derselben Adresse wie die Seite. Beim Laden werden keine anderen Dienste kontaktiert.',
+      'Links zu anderen Websites sind mit ↗ markiert. Sie werden erst nach einem Klick geöffnet.',
+      'Eingebettete Inhalte anderer Dienste laden erst nach einem Klick, zum Beispiel von Videoplattformen oder per Pixel Streaming (eine Anwendung läuft auf einem Server und wird als Video in die Seite übertragen). Vorher nennt ein Hinweis den Dienst, der dann kontaktiert wird.',
+      'Es gibt keine Formulare und keine Konten.',
+    ],
+    hosting: 'Hosting',
+    hostingText: '[Anbieter, Serverstandort und Server-Logs ergänzen, sobald feststeht, wo die Seite liegt.]',
+    controller: 'Verantwortliche Stelle',
+    controllerText: '[Offizieller Text der HS Kaiserslautern: verantwortliche Stelle und Datenschutzbeauftragte Person]',
+    rights: 'Deine Rechte',
+    rightsText: '[Offizieller Text der HS Kaiserslautern: Auskunft, Berichtigung, Löschung, Beschwerde]',
+  },
+  en: {
+    notice: 'The official privacy policy of Hochschule Kaiserslautern will appear here. The section “What this site does technically” only describes the page code and is not legal text.',
+    technical: 'What this site does technically',
+    facts: [
+      'The page code sets no cookies.',
+      'There are no analytics or tracking services.',
+      'Nothing is stored in your browser: not in localStorage, sessionStorage or IndexedDB.',
+      'Fonts, images, videos and 3D files come from the same address as the site. No other service is contacted when a page loads.',
+      'Links to other websites are marked ↗. They open only when you click them.',
+      'Embedded content from other services loads only after a click, for example from video platforms or via Pixel Streaming (an application runs on a server and is streamed into the page as video). Before that, a notice names the service that will be contacted.',
+      'There are no forms and no accounts.',
+    ],
+    hosting: 'Hosting',
+    hostingText: '[Add provider, server location and server logs once it is clear where the site is hosted.]',
+    controller: 'Controller',
+    controllerText: '[Official text from HS Kaiserslautern: controller and data protection officer]',
+    rights: 'Your rights',
+    rightsText: '[Official text from HS Kaiserslautern: access, rectification, erasure, complaint]',
+  },
+};
+const c = copy[lang];
+---
+<div class="wrap section">
+  <div class="legal">
+    <h1 class="d t-h1">{t(lang, 'footer.privacy')}</h1>
+    <div class="surface s-green">
+      <p><strong>{t(lang, 'placeholder')}.</strong> {c.notice}</p>
+    </div>
+    <section class="stack" aria-labelledby="privacy-technical">
+      <h2 id="privacy-technical" class="t-h3">{c.technical}</h2>
+      <ul>
+        {c.facts.map((fact) => <li>{fact}</li>)}
+      </ul>
+    </section>
+    <section class="stack" aria-labelledby="privacy-hosting">
+      <h2 id="privacy-hosting" class="t-h3">{c.hosting}</h2>
+      <p>{c.hostingText}</p>
+    </section>
+    <section class="stack" aria-labelledby="privacy-controller">
+      <h2 id="privacy-controller" class="t-h3">{c.controller}</h2>
+      <p>{c.controllerText}</p>
+    </section>
+    <section class="stack" aria-labelledby="privacy-rights">
+      <h2 id="privacy-rights" class="t-h3">{c.rights}</h2>
+      <p>{c.rightsText}</p>
+    </section>
+  </div>
+</div>
+
+<style>
+  .legal { max-width: var(--measure); display: flex; flex-direction: column; gap: var(--x); }
+  ul { margin: 0; padding-inline-start: var(--x); }
+</style>

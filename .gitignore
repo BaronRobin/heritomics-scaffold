@@ -9,3 +9,21 @@ creative-science-starter.zip
 .vibe-wise/
 
 .DS_Store
+
+# Astro
+node_modules/
+dist/
+.astro/
+
+# Brand font files: the license forbids sharing them (see public/fonts/brand/README.md)
+public/fonts/brand/*.woff2
+public/fonts/brand/*.woff
+public/fonts/brand/*.ttf
+public/fonts/brand/*.otf
+
+# Playwright
+test-results/
+playwright-report/
+
+# Relative-link copy of dist/ for the shared demo link
+artifact-export/

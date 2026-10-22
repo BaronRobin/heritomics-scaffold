@@ -1,0 +1,115 @@
+---
+// Format "images": a gallery / photo essay on the Stage. One image at a time in a horizontal scroll-snap track
+// (swipe natively, or use the buttons and arrow keys), caption and credit in white on black.
+// Contract, see src/scripts/stage-types.ts: the <template> is copied into the Stage on Start, so no gallery image
+// loads before the click; src/scripts/formats/images.ts then wires the buttons, keys and the "Bild n von N" status.
+// Images are never cropped (object-fit: contain) and never filtered, so scientific images keep their scale bars (DESIGN.md 5.2).
+import { Picture } from 'astro:assets';
+import { t } from '../../i18n/ui';
+import type { LocalProject } from '../../lib/projects';
+import type { Lang } from '../../i18n/routes';
+
+interface Props { project: LocalProject; lang: Lang }
+const { project, lang } = Astro.props;
+const d = project.entry.data;
+const items = d.format === 'images' ? d.embed.items : [];
+// English texts from en.mdx, item by item; anything missing falls back to German (with lang="de")
+const english = lang === 'en' ? project.translation?.data.embed?.items : undefined;
+const pick = (german: string, en?: string) => (en ? { text: en, lang: 'en' } : { text: german, lang: 'de' });
+const otherLang = (l: string) => (l !== lang ? l : undefined);
+const slides = items.map((item, i) => ({
+  ...item,
+  alt: pick(item.alt, english?.[i]?.alt),
+  caption: pick(item.caption, english?.[i]?.caption),
+  // Rendered width of a contained image: the full width on narrow screens, else limited by the Stage height
+  sizes: `(max-width: 900px) 100vw, ${Math.round(90 * Math.min(item.image.width / item.image.height, 16 / 9))}vh`,
+}));
+const total = slides.length;
+const config = { position: t(lang, 'images.position') };
+---
+<script is:inline type="application/json" data-stage-config set:html={JSON.stringify(config)} />
+<template data-stage-template>
+  <div class="ig" role="region" aria-roledescription={t(lang, 'format.images')} aria-labelledby="stage-title" tabindex="-1" data-ig>
+    <div class="ig-bar">
+      <button class="btn-o ig-btn" type="button" aria-label={t(lang, 'images.prev')} aria-disabled="true" data-ig-prev>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6" /></svg>
+      </button>
+      <p class="ig-status" aria-live="polite" data-ig-status>{t(lang, 'images.position', { n: 1, total })}</p>
+      <button class="btn-o ig-btn" type="button" aria-label={t(lang, 'images.next')} aria-disabled={total < 2 ? 'true' : 'false'} data-ig-next>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </button>
+    </div>
+    <ol class="ig-track" role="list" tabindex="-1" data-ig-track>
+      {slides.map((s, i) => (
+        <li class="ig-slide" data-scientific={s.scientific ? '' : undefined}>
+          <figure class="ig-figure">
+            <Picture src={s.image} alt={s.alt.text} lang={otherLang(s.alt.lang)} formats={['avif', 'webp']}
+              widths={[480, 800, 1200, 1600]} sizes={s.sizes} class="ig-img"
+              loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} />
+            <figcaption class="ig-caption">
+              <span lang={otherLang(s.caption.lang)}>{s.caption.text}</span>
+              {s.credit && <span class="ig-credit">{t(lang, 'photo.credit')}: {s.credit}</span>}
+            </figcaption>
+          </figure>
+        </li>
+      ))}
+    </ol>
+  </div>
+</template>
+
+<style is:global>
+  /* Runtime elements: they live in the Stage after Start, so the styles are global and scoped by the selector.
+     Stacked layout by default (bar, image, caption); side by side in wide boxes, e.g. desktop or fullscreen. */
+  [data-stage][data-format="images"] .ig {
+    /* height of the button bar: one touch target (2.75rem = 44 px) plus padding; shares its row with the
+       Stage's fullscreen button, so no control ever covers an image */
+    --ig-bar: calc(2.75rem + var(--space-3) * 2);
+    --ig-side: clamp(18rem, 34%, 24rem);
+    position: absolute; inset: 0; container: ig / size;
+    background: var(--stage-bg); color: var(--stage-text);
+  }
+  [data-stage][data-format="images"] .ig:focus-visible { outline-offset: calc(var(--focus-width) * -1); }
+
+  [data-stage][data-format="images"] .ig-bar {
+    position: absolute; inset: 0 0 auto 0; z-index: 1; height: var(--ig-bar);
+    display: flex; align-items: center; gap: var(--space-2);
+    padding: var(--space-3); padding-inline-end: calc(2.75rem + var(--space-3) * 2);
+  }
+  [data-stage][data-format="images"] .ig-btn { min-width: 2.75rem; justify-content: center; padding: var(--space-2); }
+  [data-stage][data-format="images"] .ig-btn[aria-disabled="true"] { border-color: transparent; background: transparent; color: var(--stage-text); cursor: default; }
+  [data-stage][data-format="images"] .ig-status {
+    font-size: var(--type-small); font-weight: 700; line-height: var(--lh-small);
+    font-variant-numeric: tabular-nums; white-space: nowrap; padding-inline: var(--space-1);
+  }
+
+  [data-stage][data-format="images"] .ig-track {
+    position: absolute; inset: 0; margin: 0; padding: 0; list-style: none;
+    display: flex; overflow-x: auto; overflow-y: hidden;
+    scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
+  }
+  [data-stage][data-format="images"] .ig-track::-webkit-scrollbar { display: none; }
+  [data-stage][data-format="images"] .ig-slide { flex: 0 0 100%; min-width: 0; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; }
+  [data-stage][data-format="images"] .ig-figure {
+    height: 100%; display: grid; grid-template-rows: minmax(0, 1fr) auto; padding-top: var(--ig-bar);
+  }
+  [data-stage][data-format="images"] .ig-figure picture { display: block; min-height: 0; min-width: 0; }
+  /* contain, never cover: the whole image stays visible, scale bars included; no filter of any kind */
+  [data-stage][data-format="images"] .ig-img { display: block; width: 100%; height: 100%; max-width: none; object-fit: contain; filter: none; }
+  [data-stage][data-format="images"] .ig-caption {
+    max-height: 40cqh; overflow-y: auto; max-width: var(--measure);
+    padding: var(--space-3) var(--space-4) var(--space-4);
+    font-size: var(--type-small); line-height: var(--lh-small);
+  }
+  [data-stage][data-format="images"] .ig-credit { display: block; margin-top: var(--space-1); }
+
+  @container ig (min-aspect-ratio: 3 / 2) and (min-width: 32rem) {
+    [data-stage][data-format="images"] .ig-bar { inset-inline-start: auto; width: var(--ig-side); }
+    [data-stage][data-format="images"] .ig-figure { padding-top: 0; grid-template-rows: 100%; grid-template-columns: minmax(0, 1fr) var(--ig-side); }
+    [data-stage][data-format="images"] .ig-caption { max-height: none; padding-top: calc(var(--ig-bar) + var(--space-2)); }
+  }
+
+  /* Portrait phones: a 16:9 box leaves no room for image, caption and controls, so the running gallery is 4:5 */
+  @media (max-width: 640px) and (orientation: portrait) {
+    [data-stage][data-format="images"] .stage-running:not(:fullscreen) { aspect-ratio: 4 / 5; --stage-ratio: 0.8; }
+  }
+</style>

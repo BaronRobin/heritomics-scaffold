@@ -1,0 +1,286 @@
+---
+// About page, shared by /de/ueber/ and /en/about/: the approach, the three levels (zoom),
+// principles, partners and the courses involved.
+// Texts used only on this page live in `copy` below; shared UI words come from src/i18n/ui.ts.
+// Everything in [brackets] is a placeholder for the course team to fill in. Never invent
+// names, numbers or quotes here, and check every scientific sentence with the scientist.
+import { Picture } from 'astro:assets';
+import ExternalLink from '../components/ExternalLink.astro';
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/routes';
+import lichenImage from '../assets/about/lichen-white.jpg';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+const copy = {
+  de: {
+    topline: 'Über Creative Science',
+    title: 'Forschung trifft Gestaltung.',
+    lead: 'Creative Science ist ein Modul im Master Virtual Design an der Hochschule Kaiserslautern. Wir Studierende machen hier echte Forschung für alle erfahrbar.',
+
+    approachTitle: 'Mitforschen statt dekorieren.',
+    approachLead: 'Gestaltung ist für uns keine Dekoration am Ende. Als Designerinnen und Designer forschen wir mit.',
+    approachText: [
+      'Wir arbeiten mit Forschenden zusammen. Wir stellen Fragen, lernen ihre Methoden kennen und übersetzen Forschung in Erlebnisse, die du sehen, hören und betreten kannst.',
+      'So werden wir zur Brücke zwischen der Wissenschaft und allen, die nicht selbst forschen.',
+    ],
+    audiencesTitle: 'Für wen wir gestalten',
+    audiences: ['Öffentlichkeit', 'Politik', 'Wirtschaft', 'Bildung'],
+
+    levelsTitle: 'Du bestimmst den Zoom.',
+    levelsText: 'Dr. Patrick Jung erforscht, wie Mikroorganismen Ökosysteme beeinflussen können: von ihrem winzigen Lebensraum bis zur Größe ganzer Landschaften. Unsere Erlebnisse nutzen dieselbe Idee. Jedes hat drei Ebenen, und du entscheidest, wie weit du hineinzoomst.',
+    zoom: ['Aus der Ferne', 'Näher heran', 'Ganz nah'],
+
+    principlesTitle: 'Unsere Grundsätze',
+    principles: [
+      { title: 'Einfache Sprache', text: 'Kurze Sätze, eine Idee pro Satz. Fachbegriffe erklären wir beim ersten Mal in wenigen Worten.' },
+      { title: 'Genau vor spannend', text: 'Jede wissenschaftliche Aussage prüfen wir mit den Forschenden. Wir übertreiben keine Ergebnisse, auch wenn es spannender klingen würde.' },
+      { title: 'Forschende sprechen selbst', text: 'Wenn wir Forschende zitieren, dann in ihren eigenen Worten. Das macht Forschung persönlich.' },
+      { title: 'Größenordnungen zeigen', text: 'Wir verbinden das Winzige mit dem Riesigen, zum Beispiel eine einzelne Zelle mit einer ganzen Wüste.' },
+      { title: 'Deine Privatsphäre', text: 'Kein Tracking, keine Cookies. Große Inhalte wie Videos oder 3D-Modelle laden erst, wenn du klickst. Deshalb gibt es hier auch keinen Cookie-Banner.' },
+    ],
+
+    partnersTitle: 'Partner',
+    xcelTopline: 'Forschung',
+    xcelText: 'Das Labor an der Hochschule Kaiserslautern erforscht Cyanobakterien, Grünalgen und Flechten an extremen Orten: an beiden Polen, in der Atacama-Wüste und in Höhlen.',
+    xcelPerson: 'Unser Forschungspartner dort ist Dr. Patrick Jung.',
+    photoAlt: 'Weiße, gelappte Flechte auf Gestein',
+    heritomicsTopline: 'Hochschulübergreifendes Projekt',
+    heritomicsText: 'Creative Science ist das Modul der Hochschule Kaiserslautern in Heritomics, einem gemeinsamen Projekt mehrerer Hochschulen.',
+    heritomicsMore: '[Kurzbeschreibung von Heritomics folgt]',
+    partnerUnis: '[Partner-Hochschulen folgen]',
+
+    coursesTitle: 'Beteiligte Kurse',
+    module: [
+      ['Art', 'Modul'],
+      ['Studiengang', 'Master Virtual Design'],
+      ['Hochschule', 'Hochschule Kaiserslautern'],
+      ['Semester', '[Semester]'],
+      ['Lehrende', '[Namen der Lehrenden]'],
+      ['Gruppen', '[Gruppen folgen]'],
+    ],
+    moreCourses: '[Weitere Kurse folgen, zum Beispiel an den Partner-Hochschulen]',
+  },
+  en: {
+    topline: 'About Creative Science',
+    title: 'Research meets design.',
+    lead: 'Creative Science is a module in the Virtual Design Master’s programme at Hochschule Kaiserslautern. Here, we students make real research something everyone can experience.',
+
+    approachTitle: 'Co-researchers, not decorators.',
+    approachLead: 'For us, design is not decoration added at the end. As designers, we take part in the research.',
+    approachText: [
+      'We work together with researchers. We ask questions, get to know their methods and turn research into experiences you can see, hear and step into.',
+      'This makes us the bridge between science and everyone who does not do research themselves.',
+    ],
+    audiencesTitle: 'Who we design for',
+    audiences: ['The public', 'Policymakers', 'Business', 'Education'],
+
+    levelsTitle: 'You choose the zoom.',
+    levelsText: 'Dr. Patrick Jung studies how microorganisms can influence ecosystems, from their tiny niche to the landscape scale. Our experiences borrow this idea. Each one has three levels, and you decide how far to zoom in.',
+    zoom: ['From afar', 'Closer', 'Up close'],
+
+    principlesTitle: 'Our principles',
+    principles: [
+      { title: 'Plain language', text: 'Short sentences, one idea per sentence. We explain technical terms in a few words the first time they appear.' },
+      { title: 'Accurate before exciting', text: 'We check every scientific statement with the researchers. We never overstate results, even if it would sound more exciting.' },
+      { title: 'Scientists speak for themselves', text: 'When we quote researchers, we use their own words. That makes research personal.' },
+      { title: 'Show scale', text: 'We link the tiny to the huge, for example a single cell to an entire desert.' },
+      { title: 'Your privacy', text: 'No tracking, no cookies. Heavy content such as video or 3D models only loads after you click. That is why there is no cookie banner here.' },
+    ],
+
+    partnersTitle: 'Partners',
+    xcelTopline: 'Research',
+    xcelText: 'The lab at Hochschule Kaiserslautern studies cyanobacteria, green algae and lichens in extreme places: at both poles, in the Atacama Desert and in caves.',
+    xcelPerson: 'Our research partner there is Dr. Patrick Jung.',
+    photoAlt: 'White, lobed lichen on rock',
+    heritomicsTopline: 'Multi-university project',
+    heritomicsText: 'Creative Science is Hochschule Kaiserslautern’s module within Heritomics, a joint project of several universities.',
+    heritomicsMore: '[Short description of Heritomics to follow]',
+    partnerUnis: '[Partner universities to follow]',
+
+    coursesTitle: 'Courses involved',
+    module: [
+      ['Type', 'Module'],
+      ['Programme', 'Virtual Design (Master’s)'],
+      ['University', 'Hochschule Kaiserslautern'],
+      ['Semester', '[Semester]'],
+      ['Teaching staff', '[Names of teaching staff]'],
+      ['Groups', '[Groups to follow]'],
+    ],
+    moreCourses: '[More courses to follow, for example at the partner universities]',
+  },
+}[lang];
+
+// The three levels reuse the shared words for the depth navigation and the home page steps.
+const levels = [
+  { title: t(lang, 'depth.glance'), text: t(lang, 'home.step1.text') },
+  { title: t(lang, 'depth.experience'), text: t(lang, 'home.step2.text') },
+  { title: t(lang, 'depth.deeper'), text: t(lang, 'home.step3.text') },
+].map((level, i) => ({ ...level, num: String(i + 1).padStart(2, '0'), zoom: copy.zoom[i] }));
+
+const credit = `${t(lang, 'photo.credit')}: Dr. Patrick Jung (@selectedplants)`;
+const labUrl = 'https://www.selectedplants.de/';
+const labName = 'XCEL – Extreme Cryptogam Ecology Lab';
+
+// Umlaut rule (DESIGN.md 4.4): more line height for display headlines with Ä, Ö, Ü
+const display = (s: string, size: 't-h1' | 't-h2') => ['d', size, { 'd-u': /[äöüÄÖÜ]/.test(s) }];
+---
+<section class="wrap intro" aria-labelledby="about-title">
+  <p class="topline">{copy.topline}</p>
+  <h1 id="about-title" class:list={display(copy.title, 't-h1')}>{copy.title}</h1>
+  <p class="t-lead intro-lead">{copy.lead}</p>
+</section>
+
+<section class="wrap section" aria-labelledby="about-approach">
+  <div class="two">
+    <div class="two-a stack">
+      <h2 id="about-approach" class:list={display(copy.approachTitle, 't-h2')}>{copy.approachTitle}</h2>
+      <p class="t-lead">{copy.approachLead}</p>
+      {copy.approachText.map((p) => <p class="measure">{p}</p>)}
+    </div>
+    <div class="two-b audiences">
+      <h3 class="t-h3">{copy.audiencesTitle}</h3>
+      <ul class="plain-list rows" role="list">
+        {copy.audiences.map((a) => <li class="t-h3">{a}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="wrap section" aria-labelledby="about-levels">
+  <div class="stack section-head">
+    <h2 id="about-levels" class:list={display(copy.levelsTitle, 't-h2')}>{copy.levelsTitle}</h2>
+    <p class="measure">{copy.levelsText}</p>
+  </div>
+  <ol class="plain-list three" role="list">
+    {levels.map((l) => (
+      <li class="step">
+        <span class="d step-num" aria-hidden="true">{l.num}</span>
+        <p class="topline">{l.zoom}</p>
+        <h3 class="t-h3">{l.title}</h3>
+        <p class="step-text">{l.text}</p>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<section class="wrap section" aria-labelledby="about-principles">
+  <h2 id="about-principles" class:list={[...display(copy.principlesTitle, 't-h2'), 'section-title']}>{copy.principlesTitle}</h2>
+  <ul class="plain-list rows principles" role="list">
+    {copy.principles.map((p) => (
+      <li class="principle">
+        <h3 class="t-h3">{p.title}</h3>
+        <p>{p.text}</p>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<section class="wrap section-lg" aria-labelledby="about-partners">
+  <h2 id="about-partners" class:list={[...display(copy.partnersTitle, 't-h2'), 'section-title']}>{copy.partnersTitle}</h2>
+  <div class="overlap">
+    <div class="surface s-green xcel">
+      <p class="topline">{copy.xcelTopline}</p>
+      <h3 class="t-h3">{lang === 'en' ? labName : <span lang="en">{labName}</span>}</h3>
+      <p class="partner-text">{copy.xcelText}</p>
+      <p class="partner-text">{copy.xcelPerson}</p>
+      <p class="xcel-cta"><ExternalLink href={labUrl} lang={lang} class="cta">{t(lang, 'home.research.cta')}</ExternalLink></p>
+    </div>
+    <figure class="frame xcel-img">
+      <Picture
+        src={lichenImage}
+        formats={['avif', 'webp']}
+        widths={[480, 750]}
+        sizes="(max-width: 900px) 100vw, 50vw"
+        alt={copy.photoAlt}
+        loading="lazy"
+      />
+      <figcaption class="credit">{credit}</figcaption>
+    </figure>
+    <div class="stack heritomics">
+      <p class="topline">{copy.heritomicsTopline}</p>
+      <h3 class="t-h3">Heritomics</h3>
+      <p class="partner-text">{copy.heritomicsText}</p>
+      <p class="partner-text">{copy.heritomicsMore}</p>
+      <h4 class="topline unis-title">{t(lang, 'footer.partners')}</h4>
+      <ul class="plain-list rows" role="list">
+        <li>Hochschule Kaiserslautern</li>
+        <li>{copy.partnerUnis}</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="wrap section" aria-labelledby="about-courses">
+  <h2 id="about-courses" class:list={[...display(copy.coursesTitle, 't-h2'), 'section-title']}>{copy.coursesTitle}</h2>
+  <div class="two">
+    <div class="two-a stack">
+      <h3 class="t-h3">Creative Science</h3>
+      <dl class="facts">
+        {copy.module.map(([term, value]) => (
+          <div class="fact">
+            <dt>{term}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="more-courses">{copy.moreCourses}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Intro: calm, white, type only. The page's one surface composition sits with the partners. */
+  .intro { display: flex; flex-direction: column; gap: var(--x-half); padding-block: var(--space-4) var(--x); }
+  .intro-lead { max-width: 40ch; }
+
+  .section-title { margin-bottom: var(--x); }
+  .section-head { margin-bottom: var(--x); }
+
+  /* Ruled list rows (DESIGN.md 6.4): hairline black rules between rows */
+  .rows > li { border-top: var(--rule-width) solid var(--rule); padding-block: var(--space-3); }
+  .rows > li:last-child { border-bottom: var(--rule-width) solid var(--rule); }
+
+  /* Approach: who we design for */
+  .audiences { display: flex; flex-direction: column; gap: var(--x-half); align-self: end; }
+
+  /* Three levels */
+  .step { display: flex; flex-direction: column; gap: var(--space-2); border-top: var(--rule-width) solid var(--rule); padding-top: var(--x-half); }
+  .step-num { font-size: var(--type-h2); line-height: var(--lh-display); }
+  .step-text { max-width: 36ch; }
+
+  /* Principles: title left, text right */
+  .principle { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--space-2) var(--x); }
+  .principles > li { padding-block: var(--x-half); }
+  .principle h3 { grid-column: 1 / 6; }
+  .principle p { grid-column: 6 / 13; max-width: var(--measure); }
+
+  /* Partners: green surface overlapping the photo from the left (DESIGN.md 6.3) */
+  .xcel { grid-column: 1 / 8; grid-row: 1; align-self: center; }
+  .xcel-img { grid-column: 7 / 13; grid-row: 1; height: calc(var(--x) * 14); }
+  /* Credit bottom right, away from the overlapping surface */
+  .xcel-img .credit { left: auto; right: var(--space-4); }
+  .xcel-cta { margin-top: var(--space-2); }
+  .partner-text { max-width: 52ch; }
+  .heritomics { grid-column: 7 / 13; grid-row: 2; margin-top: var(--x-2); }
+  .unis-title { margin: var(--space-2) 0 0; }
+
+  /* Courses: module facts as ruled rows */
+  .facts { margin: 0; }
+  .fact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--x-half); border-top: var(--rule-width) solid var(--rule); padding-block: var(--space-3); }
+  .fact:last-child { border-bottom: var(--rule-width) solid var(--rule); }
+  .fact dt { font-weight: 700; }
+  .fact dd { margin: 0; }
+  .more-courses { margin-top: var(--x-half); }
+
+  /* Phones and tablets: one column; photo on top, surface below with a 1x overlap */
+  @media (max-width: 900px) {
+    .audiences { align-self: start; margin-top: var(--x-half); }
+    .principle h3, .principle p { grid-column: 1 / -1; }
+    .xcel-img { grid-column: 1 / -1; grid-row: 1; height: calc(var(--x) * 13); }
+    .xcel { grid-column: 1 / -1; grid-row: 2; margin: calc(var(--x) * -1) var(--x) 0 0; }
+    .xcel-img .credit { top: var(--space-4); bottom: auto; }
+    .heritomics { grid-column: 1 / -1; grid-row: 3; }
+  }
+</style>

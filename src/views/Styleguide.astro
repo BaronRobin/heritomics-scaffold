@@ -1,0 +1,219 @@
+---
+// Styleguide (brief: Information architecture 5): every token, type style, component and embed format
+// in one place, as the visual reference for all groups. Source of truth: docs/DESIGN.md + tokens.css.
+import { Picture } from 'astro:assets';
+import Experience from '../components/Experience.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ExternalLink from '../components/ExternalLink.astro';
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/routes';
+import { getProjects, getProject } from '../lib/projects';
+import figureImage from '../content/projects/leben-aus-nebel/figure.jpg';
+import surfaceImage from '../assets/about/lichen-white.jpg';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const de = lang === 'de';
+
+const copy = de ? {
+  title: 'Styleguide', lead: 'Alle Bausteine des Hubs an einem Ort. Die Regeln stehen in docs/DESIGN.md, die Werte in src/styles/tokens.css. Nutze nur diese Bausteine.',
+  colors: 'Farben', colorsNote: 'Die Palette ist fix. Text ist immer schwarz, auf der Stage weiß. Höchstens zwei Flächenfarben pro Bildschirm.',
+  type: 'Typografie', typeNote: 'Im Fallback-Modus läuft alles in Poppins; mit der Lizenz für Stratos und Matter werden Überschriften zu Stratos in Großbuchstaben.',
+  space: 'Abstände', spaceNote: 'Alles leitet sich von x ab: 24 px auf dem Handy, 32 px auf dem Tablet, 40 px auf dem Desktop.',
+  surfaces: 'Flächen', surfacesNote: 'Flächen und Bilder überlappen sich, nie isoliert und nie Kante an Kante.',
+  buttons: 'Buttons und Links', chips: 'Chips', cards: 'Karten', figure: 'Wissenschaftliche Abbildung',
+  figureNote: 'Unbearbeitet, mit Maßstab und Bildunterschrift (DESIGN.md 5.2).',
+  formats: 'Stage und Formate', formatsNote: 'Jedes Format sitzt auf der schwarzen Stage. Nichts Schweres lädt vor dem Klick auf „Erlebnis starten“.',
+  missing: 'Für dieses Format gibt es noch kein Beispiel.',
+  sample: 'Beispieltext', link: 'Textlink', onStage: 'Auf der Stage',
+} : {
+  title: 'Styleguide', lead: 'Every building block of the hub in one place. The rules are in docs/DESIGN.md, the values in src/styles/tokens.css. Use only these blocks.',
+  colors: 'Colours', colorsNote: 'The palette is fixed. Text is always black, white on the Stage. At most two surface colours per screen.',
+  type: 'Typography', typeNote: 'In fallback mode everything uses Poppins; with the Stratos and Matter licence, headlines switch to uppercase Stratos.',
+  space: 'Spacing', spaceNote: 'Everything derives from x: 24 px on phones, 32 px on tablets, 40 px on desktops.',
+  surfaces: 'Surfaces', surfacesNote: 'Surfaces and images overlap; never isolated, never edge to edge.',
+  buttons: 'Buttons and links', chips: 'Chips', cards: 'Cards', figure: 'Scientific figure',
+  figureNote: 'Unaltered, with scale bar and caption (DESIGN.md 5.2).',
+  formats: 'Stage and formats', formatsNote: 'Every format sits on the black Stage. Nothing heavy loads before “Start experience” is clicked.',
+  missing: 'There is no example for this format yet.',
+  sample: 'Sample text', link: 'Text link', onStage: 'On the Stage',
+};
+
+const colors = [
+  { token: '--color-white', name: 'Weiß / White', hex: '#ffffff', use: de ? 'Hauptfarbe, Hintergrund' : 'Main colour, background' },
+  { token: '--color-black', name: 'Schwarz / Black', hex: '#000000', use: de ? 'Text, Stage, Footer' : 'Text, Stage, footer' },
+  { token: '--color-yellow', name: 'Gelb / Yellow', hex: '#f3f707', use: de ? 'Fläche, lautester Moment' : 'Surface, loudest moment' },
+  { token: '--color-blue', name: 'Blau / Blue', hex: '#38d5ff', use: de ? 'Fläche' : 'Surface' },
+  { token: '--color-green', name: 'Grün / Green', hex: '#d2f2e1', use: de ? 'Fläche, ruhigste' : 'Surface, quietest' },
+  { token: '--color-duplex', name: 'Duplex-Blau', hex: '#38affd', use: de ? 'Nur für Duplex-Bilder' : 'Duplex images only' },
+  { token: '--color-grey', name: 'Grau / Grey', hex: '#555555', use: de ? 'Metadaten, nur auf Weiß' : 'Metadata, on white only' },
+];
+const typeScale = [
+  { cls: 'd t-display', token: '--type-display', text: de ? 'Leben aus Nebel.' : 'Life from fog.' },
+  { cls: 'd t-h1', token: '--type-h1', text: de ? 'Seitentitel.' : 'Page title.' },
+  { cls: 'd t-h2', token: '--type-h2', text: de ? 'Abschnitt.' : 'Section.' },
+  { cls: 't-h3', token: '--type-h3', text: de ? 'Zwischenüberschrift' : 'Subheading' },
+  { cls: 't-lead', token: '--type-lead', text: de ? 'Einstiegstext in einem oder zwei Sätzen.' : 'Lead text in one or two sentences.' },
+  { cls: 't-quote', token: '--type-quote', text: de ? '„Ein Zitat in eigenen Worten.“' : '“A quote in their own words.”' },
+  { cls: '', token: '--type-body', text: de ? 'Fließtext, linksbündig, höchstens 65 Zeichen breit.' : 'Body text, left-aligned, at most 65 characters wide.' },
+  { cls: 'topline', token: '--type-topline', text: 'Biokrusten · Atacama-Wüste' },
+  { cls: 't-small', token: '--type-small', text: de ? 'Bildunterschrift und Infotext.' : 'Caption and info text.' },
+];
+const spaces = ['--space-1', '--space-2', '--space-3', '--space-4', '--x-half', '--x', '--x-2', '--x-3', '--x-4'];
+
+const listed = (await getProjects(lang)).slice(0, 3);
+const samples = [
+  { format: 'model3d', slug: 'leben-aus-nebel' },
+  { format: 'video', slug: 'kaelte-als-zuhause' },
+  { format: 'webxr', slug: 'im-dunkeln-wachsen' },
+  { format: 'images', slug: 'sample-images' },
+  { format: 'canvas', slug: 'sample-canvas' },
+  { format: 'splat', slug: 'sample-splat' },
+  { format: 'iframe · build', slug: 'sample-build' },
+  { format: 'iframe · pixel streaming', slug: 'sample-pixelstreaming' },
+];
+const formatSamples = await Promise.all(samples.map(async (s) => ({ ...s, project: await getProject(lang, s.slug) })));
+---
+<div class="wrap section styleguide">
+  <header class="stack intro">
+    <h1 class="d t-h1">{copy.title}</h1>
+    <p class="t-lead">{copy.lead}</p>
+  </header>
+
+  <section aria-labelledby="sg-colors" class="block">
+    <h2 id="sg-colors" class="d t-h2">{copy.colors}</h2>
+    <p class="note">{copy.colorsNote}</p>
+    <ul class="plain-list swatches">
+      {colors.map((c) => (
+        <li class="swatch-item">
+          <span class="chip-swatch" style={`background: var(${c.token})`}></span>
+          <span class="t-small"><strong>{c.name}</strong><br /><code>{c.token}</code> · {c.hex}<br />{c.use}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section aria-labelledby="sg-type" class="block">
+    <h2 id="sg-type" class="d t-h2">{copy.type}</h2>
+    <p class="note">{copy.typeNote}</p>
+    <dl class="type-list">
+      {typeScale.map((s) => (
+        <div class="type-row">
+          <dt class="t-small"><code>{s.token}</code></dt>
+          <dd class={s.cls}>{s.text}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <section aria-labelledby="sg-space" class="block">
+    <h2 id="sg-space" class="d t-h2">{copy.space}</h2>
+    <p class="note">{copy.spaceNote}</p>
+    <ul class="plain-list spaces">
+      {spaces.map((s) => <li class="space-row"><code class="t-small">{s}</code><span class="space-bar" style={`width: var(${s})`}></span></li>)}
+    </ul>
+  </section>
+
+  <section aria-labelledby="sg-surfaces" class="block">
+    <h2 id="sg-surfaces" class="d t-h2">{copy.surfaces}</h2>
+    <p class="note">{copy.surfacesNote}</p>
+    <div class="overlap surfaces-demo">
+      <div class="frame surfaces-img">
+        <Picture src={surfaceImage} alt={de ? 'Weiße, gelappte Flechte auf Gestein' : 'White, lobed lichen on rock'} formats={['avif', 'webp']} widths={[480, 800]} sizes="(max-width: 900px) 100vw, 50vw" loading="lazy" />
+        <span class="credit">{t(lang, 'photo.credit')}: Dr. Patrick Jung (@selectedplants)</span>
+      </div>
+      <div class="surface s-green surfaces-text">
+        <p class="topline">s-green</p>
+        <p class="t-h3">{copy.sample}</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="sg-buttons" class="block">
+    <h2 id="sg-buttons" class="d t-h2">{copy.buttons}</h2>
+    <div class="row">
+      <a class="btn" href="#sg-buttons">{t(lang, 'home.cta')} <span aria-hidden="true">→</span></a>
+      <a class="cta" href="#sg-buttons">{t(lang, 'home.allExperiences')} <span aria-hidden="true">→</span></a>
+      <a href="#sg-buttons">{copy.link}</a>
+      <ExternalLink href="https://www.selectedplants.de/" lang={lang}>selectedplants.de</ExternalLink>
+    </div>
+    <div class="row on-stage">
+      <span class="t-small">{copy.onStage}:</span>
+      <button class="btn btn-y" type="button">{t(lang, 'stage.start')} <span aria-hidden="true">→</span></button>
+      <button class="btn-o" type="button">{t(lang, 'stage.stop')}</button>
+    </div>
+  </section>
+
+  <section aria-labelledby="sg-chips" class="block">
+    <h2 id="sg-chips" class="d t-h2">{copy.chips}</h2>
+    <div class="chips" role="group" aria-label={copy.chips}>
+      <button class="chip" type="button" aria-pressed="true">{t(lang, 'filter.all')}</button>
+      <button class="chip" type="button" aria-pressed="false">{t(lang, 'format.video')}</button>
+      <button class="chip" type="button" aria-pressed="false">{t(lang, 'format.model3d')}</button>
+    </div>
+    <ul class="chips on-stage" aria-label={t(lang, 'stage.requirements')}>
+      <li class="chip-o">{de ? 'Desktop empfohlen' : 'Desktop recommended'}</li>
+      <li class="chip-o">{de ? 'Ohne Ton' : 'No sound'}</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="sg-cards" class="block">
+    <h2 id="sg-cards" class="d t-h2">{copy.cards}</h2>
+    <ul class="three plain-list">{listed.map((p) => <li><ProjectCard project={p} lang={lang} headingLevel={3} /></li>)}</ul>
+  </section>
+
+  <section aria-labelledby="sg-figure" class="block">
+    <h2 id="sg-figure" class="d t-h2">{copy.figure}</h2>
+    <p class="note">{copy.figureNote}</p>
+    <figure class="stack figure">
+      <div class="frame frame-sci">
+        <Picture src={figureImage} alt={de ? 'Mikroskopaufnahme runder, mehrfach geteilter Zellen mit Maßstabsbalken von 10 µm' : 'Micrograph of round cells divided into several parts, with a 10 µm scale bar'} formats={['avif', 'webp']} widths={[480, 800]} sizes="(max-width: 900px) 100vw, 40vw" loading="lazy" />
+      </div>
+      <figcaption class="t-small">{de ? '[Was das Bild zeigt.] Mikroskopie, unbearbeitet.' : '[What the image shows.] Microscopy, unaltered.'} <span class="grey">{t(lang, 'photo.credit')}: Dr. Patrick Jung (@selectedplants)</span></figcaption>
+    </figure>
+  </section>
+
+  <section aria-labelledby="sg-formats" class="block">
+    <h2 id="sg-formats" class="d t-h2">{copy.formats}</h2>
+    <p class="note">{copy.formatsNote}</p>
+  </section>
+</div>
+
+{formatSamples.map((s, i) => (
+  <section class="format-sample" aria-labelledby={`sg-format-${i}`}>
+    <h3 id={`sg-format-${i}`} class="wrap t-h3 format-name"><code>{s.format}</code></h3>
+    {s.project
+      ? <Experience project={s.project} lang={lang} anchor={`sg-stage-${i}`} />
+      : <p class="wrap t-small">{copy.missing}</p>}
+  </section>
+))}
+
+<style>
+  .styleguide { display: flex; flex-direction: column; gap: var(--x-3); }
+  .intro { max-width: var(--measure); }
+  .block { display: flex; flex-direction: column; gap: var(--x-half); }
+  .note { max-width: var(--measure); }
+  code { font-size: var(--type-small); }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: var(--x-half); }
+  .swatch-item { display: flex; gap: var(--space-3); align-items: flex-start; }
+  .chip-swatch { flex: none; width: var(--x-2); height: var(--x-2); outline: var(--rule-width) solid var(--rule); }
+  .type-list { margin: 0; display: flex; flex-direction: column; gap: var(--x-half); }
+  .type-row { display: grid; grid-template-columns: minmax(8rem, 12rem) 1fr; gap: var(--x-half); align-items: baseline; border-top: var(--rule-width) solid var(--rule); padding-top: var(--space-2); }
+  .type-row dd { margin: 0; min-width: 0; }
+  .spaces { display: flex; flex-direction: column; gap: var(--space-2); }
+  .space-row { display: grid; grid-template-columns: 7rem 1fr; align-items: center; gap: var(--space-3); }
+  .space-bar { display: block; height: var(--space-3); background: var(--color-black); }
+  .surfaces-img { grid-column: 1 / 8; grid-row: 1; aspect-ratio: 3 / 2; }
+  .surfaces-text { grid-column: 6 / 13; grid-row: 1; align-self: end; margin-bottom: calc(var(--x) * -1); }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--x-half) var(--x); }
+  .on-stage { background: var(--stage-bg); color: var(--stage-text); padding: var(--x-half); }
+  .figure { max-width: 24rem; }
+  .figure .frame { aspect-ratio: 1 / 1; }
+  .format-sample { padding-top: var(--x); }
+  .format-name { margin-bottom: var(--space-3); }
+  @media (max-width: 900px) {
+    .surfaces-img, .surfaces-text { grid-column: 1 / -1; }
+    .surfaces-text { grid-row: 2; margin: calc(var(--x) * -1) 0 0 var(--x); }
+    .type-row { grid-template-columns: 1fr; }
+  }
+</style>

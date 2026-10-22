@@ -1,0 +1,9 @@
+---
+// A link that leaves the hub: shows ↗ (DESIGN.md 7.3) and tells screen readers it is external.
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/routes';
+
+interface Props { href: string; lang: Lang; class?: string; srContext?: string }
+const { href, lang, class: className, srContext } = Astro.props;
+---
+<a href={href} class={className}><slot />{srContext && <span class="sr-only">: {srContext}</span>} <span aria-hidden="true">↗</span><span class="sr-only"> {t(lang, 'link.external')}</span></a>

@@ -1,0 +1,11 @@
+/*
+ * HS KL brand fonts. Loaded only when the site is built with PUBLIC_BRAND_FONTS=true.
+ * The .woff2 files are git-ignored: the Stratos web license (EULA 3.3b, 3.5c) covers only
+ * HS KL's registered domain and forbids making the files available to others. See README.md here.
+ */
+@font-face { font-family: "Stratos"; src: url("Stratos-ExtraBold-Web.woff2") format("woff2"); font-weight: 800; font-display: swap; }
+@font-face { font-family: "Matter"; src: url("Matter-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Matter"; src: url("Matter-RegularItalic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Matter"; src: url("Matter-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Matter"; src: url("Matter-SemiBold.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Matter"; src: url("Matter-Bold.woff2") format("woff2"); font-weight: 700; font-display: swap; }

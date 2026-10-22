@@ -1,0 +1,52 @@
+---
+// Format "canvas": a group's own JavaScript sketch, drawn into a <canvas> on the Stage.
+// - The JSON below goes to src/scripts/formats/canvas.ts as ctx.config when the visitor clicks Start.
+//   It names the sketch: src/content/projects/<slug>/<embed.module>. The sketch contract is documented there.
+// - The <template> is copied into the Stage on start, so nothing in it runs or loads before the click.
+// - The visible label marks the sketch as speculative (DESIGN.md 5.1); the help line says how to play.
+import type { LocalProject } from '../../lib/projects';
+import { embedText } from '../../lib/projects';
+import { t } from '../../i18n/ui';
+import type { Lang } from '../../i18n/routes';
+
+interface Props { project: LocalProject; lang: Lang }
+const { project, lang } = Astro.props;
+const d = project.entry.data;
+if (d.format !== 'canvas') throw new Error(`Canvas.astro got a project with format "${d.format}"`);
+
+const description = embedText(project, lang, 'description', d.embed.description)!;
+const config = { slug: project.slug, module: d.embed.module };
+const captionId = `canvas-caption-${project.slug}`;
+// Fixed wording on purpose (DESIGN.md 5.1), so it is not a dictionary key
+const label = lang === 'de' ? 'Spekulative Visualisierung' : 'Speculative visualization';
+---
+<script is:inline type="application/json" data-stage-config set:html={JSON.stringify(config)} />
+<template data-stage-template>
+  <div class="canvas-embed">
+    <div class="canvas-area">
+      <canvas tabindex="0" role="img" aria-label={description.text} aria-describedby={captionId}
+        lang={description.lang !== lang ? description.lang : undefined}></canvas>
+    </div>
+    <p class="canvas-caption" id={captionId}>
+      <strong class="canvas-label">{label}.</strong>{' '}<span>{t(lang, 'canvas.help')}</span>
+    </p>
+  </div>
+</template>
+
+<style is:global>
+  [data-stage][data-format="canvas"] .canvas-embed {
+    position: absolute; inset: 0;
+    display: grid; grid-template-rows: minmax(0, 1fr) auto;
+    background: var(--stage-bg); color: var(--stage-text);
+  }
+  [data-stage][data-format="canvas"] .canvas-area { position: relative; min-height: 0; overflow: hidden; }
+  [data-stage][data-format="canvas"] .canvas-area canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+  /* Focus ring drawn inside the canvas, so it stays visible in fullscreen and at the Stage edges */
+  [data-stage][data-format="canvas"] .canvas-area canvas:focus-visible { outline-offset: calc(var(--focus-width) * -1); }
+  [data-stage][data-format="canvas"] .canvas-caption {
+    position: relative; margin: 0; padding: var(--space-2) var(--space-3);
+    background: var(--stage-bg); border-top: var(--rule-width) solid var(--stage-text);
+    font-size: var(--type-small); line-height: var(--lh-small);
+  }
+  [data-stage][data-format="canvas"] .canvas-label { font-weight: 700; }
+</style>

@@ -1,0 +1,80 @@
+# Deploy: builds the site and publishes dist/ to GitHub Pages on every push to main (or by hand
+# via "Run workflow").
+#
+# Before this works:
+# - GitHub Pages on a PRIVATE repository needs a paid GitHub plan (Pro, Team or Enterprise).
+#   On the free plan the repository must be public.
+# - Enable Pages first: repository Settings > Pages > Build and deployment > Source: "GitHub Actions".
+# - For a project page (https://<owner>.github.io/<repo>/) astro.config.mjs needs
+#   `site: 'https://<owner>.github.io'` and `base: '/<repo>'`, otherwise CSS, scripts and links
+#   point to the wrong place. With a custom domain, set `site` to that domain and leave `base` out.
+#
+# The privacy and budget checks run here too, so a build that breaks the rules is never published.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One deployment at a time; a running deployment is allowed to finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out (including Git LFS media)
+        uses: actions/checkout@v7
+        with:
+          lfs: true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate content
+        run: npm run validate --if-present
+
+      - name: Build site
+        run: npm run build
+
+      - name: No external requests on page load
+        run: npm run check:external
+
+      - name: Page budgets (JS and total size)
+        run: npm run check:budgets
+
+      - name: Tests
+        run: npm test --if-present
+
+      - name: Upload site for GitHub Pages
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

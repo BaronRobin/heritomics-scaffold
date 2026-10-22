@@ -1,0 +1,34 @@
+---
+// Site footer (DESIGN.md 7.2): partner logos (placeholders until the official files arrive),
+// project line, content credits and the legal links.
+import { t } from '../i18n/ui';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { path, asset, type Lang, type RouteKey } from '../i18n/routes';
+import ExternalLink from './ExternalLink.astro';
+
+interface Props { lang: Lang; routeKey: RouteKey; flush?: boolean }
+const { lang, routeKey, flush = false } = Astro.props;
+const whiteLogo = existsSync(join(process.cwd(), 'public/brand/hskl-logo-white.svg')) ? asset('brand/hskl-logo-white.svg') : undefined;
+const partners = [t(lang, 'logo.partner'), t(lang, 'logo.partner'), t(lang, 'logo.partner')];
+---
+<footer class="footer" style={flush ? 'margin-top: 0' : undefined}>
+  <div class="wrap footer-inner">
+    <ul class="partners" aria-label={t(lang, 'footer.partners')}>
+      <li>{whiteLogo ? <img class="logo" src={whiteLogo} alt="Hochschule Kaiserslautern" /> : <span class="placeholder logo">{t(lang, 'logo.hsklWhite')}</span>}</li>
+      {partners.map((label) => <li><span class="placeholder logo">{label}</span></li>)}
+    </ul>
+    <div class="stack footer-text">
+      <p>{t(lang, 'footer.project')}</p>
+      <p class="t-small">
+        {t(lang, 'footer.credits')}{' '}
+        <ExternalLink href="https://www.selectedplants.de/" lang={lang}>selectedplants.de</ExternalLink>{' · '}
+        <ExternalLink href="https://www.instagram.com/selectedplants/" lang={lang}>@selectedplants</ExternalLink>
+      </p>
+    </div>
+    <nav class="footer-legal" aria-label={t(lang, 'footer.legal')}>
+      <a href={path(lang, 'imprint')} aria-current={routeKey === 'imprint' ? 'page' : undefined}>{t(lang, 'footer.imprint')}</a>
+      <a href={path(lang, 'privacy')} aria-current={routeKey === 'privacy' ? 'page' : undefined}>{t(lang, 'footer.privacy')}</a>
+    </nav>
+  </div>
+</footer>

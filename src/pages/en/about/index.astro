@@ -1,0 +1,14 @@
+---
+// About (Über). Content: src/views/About.astro
+import Base from '../../../layouts/Base.astro';
+import About from '../../../views/About.astro';
+import { t } from '../../../i18n/ui';
+---
+<Base
+  lang="en"
+  routeKey="about"
+  title={t('en', 'nav.about')}
+  description="How Creative Science works: our approach, the three levels of every experience, our principles, partners and courses."
+>
+  <About lang="en" />
+</Base>

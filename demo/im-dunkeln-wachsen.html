@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="de" data-fonts="fallback">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Im Dunkeln wachsen · Creative Science</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="brand-fonts.css">
+<link rel="stylesheet" href="mockup.css">
+</head>
+<body>
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <filter id="duplex-blue" color-interpolation-filters="sRGB">
+    <feColorMatrix type="saturate" values="0"/>
+    <feComponentTransfer>
+      <feFuncR type="table" tableValues="0.2196 1"/>
+      <feFuncG type="table" tableValues="0.6863 1"/>
+      <feFuncB type="table" tableValues="0.9922 1"/>
+    </feComponentTransfer>
+  </filter>
+</svg>
+
+<a class="skip-link" href="#inhalt">Zum Inhalt springen</a>
+<header class="wrap nav">
+  <div class="brand">
+    <div class="logo-ph">HS KL Logo<br>(offizielle Datei)</div>
+    <a class="d brand-name" href="index.html">Creative Science</a>
+  </div>
+  <nav class="navlinks" aria-label="Hauptnavigation">
+    <a href="index.html#erlebnisse" aria-current="page">Erlebnisse</a>
+    <a href="index.html#ueber">Über</a>
+    <span class="lang"><span lang="de" aria-current="true">DE</span> <span aria-hidden="true">|</span> <span class="lang-off" lang="en">EN<span class="sr-only"> (English version coming soon)</span></span></span>
+  </nav>
+  <button class="menu-btn" id="menu-open" type="button" aria-expanded="false" aria-controls="menu">Menü</button>
+  <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menü" hidden>
+    <button class="menu-btn" id="menu-close" type="button">Schließen</button>
+    <nav aria-label="Hauptnavigation mobil">
+      <a href="index.html#erlebnisse">Erlebnisse</a>
+      <a href="index.html#ueber">Über</a>
+    </nav>
+    <span class="lang"><span lang="de" aria-current="true">DE</span> <span aria-hidden="true">|</span> <span class="lang-off" lang="en">EN<span class="sr-only"> (English version coming soon)</span></span></span>
+  </div>
+</header>
+
+<div class="depth">
+  <nav class="wrap" aria-label="Ebenen">
+    <a href="#ueberblick" aria-current="location">Überblick</a>
+    <span aria-hidden="true">·</span>
+    <a href="#erleben">Erleben</a>
+    <span aria-hidden="true">·</span>
+    <a href="#vertiefen">Vertiefen</a>
+  </nav>
+</div>
+
+<main id="inhalt" tabindex="-1">
+  <!-- Level 1: Überblick -->
+  <section id="ueberblick" class="wrap" aria-labelledby="page-title" style="padding-top: var(--x); padding-bottom: var(--x-3)">
+    <div style="margin-bottom: var(--x)"><a class="cta back-link" href="index.html#erlebnisse"><span aria-hidden="true">←</span> Alle Erlebnisse</a></div>
+    <div class="overlap">
+      <div class="ph ph-duplex exp-hero-img">
+        <img src="img/cave-hero.jpg" alt="Höhleneingang, die Felswände violett und grün bewachsen" width="1200" height="1600" class="duplex">
+        <span class="credit">Foto: Dr. Patrick Jung (@selectedplants), Duplex</span>
+      </div>
+      <div class="surface s-yellow exp-hero-surface" data-key-surface>
+        <p class="topline">Mikroorganismen · Höhlen · Beispielprojekt</p>
+        <h1 id="page-title" class="d t-h1">Im Dunkeln wachsen.</h1>
+        <p class="t-lead" style="margin-top: var(--x-half)">Auch Höhlen gehören zu den extremen Orten, an denen das XCEL Lab forscht. [Ein bis zwei Sätze der Gruppe zum Erlebnis.]</p>
+        <p class="meta-row t-small"><span><strong>Gruppe</strong> [Gruppenname]</span><span><strong>Format</strong> VR</span><span><strong>Dauer</strong> 12 Min.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Level 2: Erleben (the Stage) -->
+  <section id="erleben" class="stage" aria-labelledby="stage-title">
+    <div class="wrap stage-grid">
+      <div class="stage-media">
+        <div class="ph ph-dark stage-box" id="stage-poster">
+          <img src="img/crust-green-rocks.jpg" alt="Steine, überzogen mit grünen und dunklen Krusten" width="1200" height="1600" loading="lazy">
+          <span class="credit">Foto: Dr. Patrick Jung (@selectedplants)</span>
+        </div>
+        <div class="stage-box stage-running" id="stage-running" hidden>
+          <p style="max-width: 40ch">[Hier läuft das Erlebnis der Gruppe: eine VR-Szene oder der Start eines eigenständigen VR-Builds. Innerhalb dieser Fläche gestaltet jede Gruppe frei.]</p>
+          <button class="btn-o fs" type="button" aria-label="Vollbild">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="stage-info">
+        <p class="topline">VR · 12 Min.</p>
+        <h2 id="stage-title" class="d d-u t-h2">Betritt die Höhle.</h2>
+        <p>[Ein Satz der Gruppe, was man in der VR-Szene erlebt.]</p>
+        <ul class="chips" aria-label="Voraussetzungen">
+          <li class="chip-o">VR-Headset optional</li>
+          <li class="chip-o">Desktop-Ansicht möglich</li>
+          <li class="chip-o">[Alternative: Video-Rundgang]</li>
+        </ul>
+        <p class="t-small"><strong>Hinweis:</strong> Bewegung im Raum und Kamerafahrten können Schwindel auslösen. Du kannst jederzeit abbrechen.</p>
+        <div class="stack" id="stage-start">
+          <button class="btn btn-y" id="stage-start-btn" type="button">Erlebnis starten <span aria-hidden="true">→</span></button>
+          <p class="t-small">Lädt erst nach dem Klick, ca. [120] MB. Keine externen Dienste.</p>
+        </div>
+        <button class="btn-o" id="stage-stop" type="button" hidden>Erlebnis beenden</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section-lg" aria-labelledby="frage">
+    <div class="two">
+      <div class="two-a stack">
+        <p class="topline">Die Frage</p>
+        <h2 id="frage" class="d d-u t-h2">Was wächst im Dunkeln?</h2>
+        <p style="max-width: 60ch">Höhlen gehören zu den extremen Lebensräumen, die das XCEL Lab erforscht, neben den Polen und der Atacama-Wüste. [Hier erklärt die Gruppe in bis zu 80 Wörtern, welche Frage ihr Erlebnis stellt. Jede Aussage wird mit Patrick Jung abgestimmt.]</p>
+        <p class="t-small grey">Nach Dr. Patrick Jung, <a href="https://www.selectedplants.de/">selectedplants.de <span aria-hidden="true">↗</span><span class="sr-only"> (externe Seite)</span></a></p>
+      </div>
+      <figure class="two-b stack" style="gap: 10px">
+        <div class="ph ph-sci" style="aspect-ratio: 1 / 1">
+          <img src="img/filaments-microscopy.jpg" alt="Mikroskopaufnahme perlschnurartiger Zellfäden mit Maßstabsbalken von 50 µm" width="940" height="1200" loading="lazy">
+        </div>
+        <figcaption class="t-small">[Was das Bild zeigt, ergänzt Patrick Jung.] Mikroskopie, unbearbeitet, mit Original-Maßstab. <span class="grey">Foto: Dr. Patrick Jung (@selectedplants)</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Level 3: Vertiefen -->
+  <section id="vertiefen" style="border-top: var(--rule-width) solid var(--rule)" aria-labelledby="vert">
+    <div class="wrap section">
+      <h2 id="vert" class="d t-h2" style="margin-bottom: var(--x)">Vertiefen</h2>
+      <div class="two">
+        <div class="two-a stack" style="gap: var(--x)">
+          <div class="stack" style="gap: 8px">
+            <h3 class="t-h3">Methode</h3>
+            <p style="max-width: 60ch">[Wie die Daten entstanden sind: Probenahme in der Höhle, Messung, Mikroskopie, 3D-Scans.]</p>
+          </div>
+          <div class="stack" style="gap: 8px">
+            <h3 class="t-h3">Gestaltung</h3>
+            <p style="max-width: 60ch">[Wie die Gruppe aus der Forschung eine VR-Szene gemacht hat: Ideen, Prototypen, Entscheidungen.]</p>
+          </div>
+          <div>
+            <h3 class="t-h3" style="margin-bottom: 8px">Quellen</h3>
+            <ul class="src-list">
+          <li class="src"><span>Patrick Jung: Forschung und Publikationen. selectedplants.de.</span><a class="cta" href="https://www.selectedplants.de/projects-8">Lesen<span class="sr-only">: Forschung und Publikationen von Patrick Jung</span> <span aria-hidden="true">↗</span><span class="sr-only"> (externe Seite)</span></a></li>
+          <li class="src"><span>[Fachartikel zur Höhlenforschung, Autor:innen, Jahr]</span><a class="cta" href="https://www.selectedplants.de/publications">Lesen<span class="sr-only">: Publikationsliste von Patrick Jung</span> <span aria-hidden="true">↗</span><span class="sr-only"> (externe Seite)</span></a></li>
+            </ul>
+          </div>
+        </div>
+        <aside class="two-b" aria-labelledby="sci-name">
+          <div class="ph" style="aspect-ratio: 4 / 5" role="img" aria-label="Platzhalter Porträt"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="0" x2="100" y2="100" stroke="#000" vector-effect="non-scaling-stroke"/><line x1="100" y1="0" x2="0" y2="100" stroke="#000" vector-effect="non-scaling-stroke"/></svg><span>[Porträt: nur mit Freigabe der Person]</span></div>
+          <div class="surface s-yellow sci-card" data-key-surface>
+            <p class="topline">Forschung</p>
+            <h3 id="sci-name" class="t-h3">Dr. Patrick Jung</h3>
+            <p style="font-size: 16px; line-height: 1.45">Leitet XCEL – Extreme Cryptogam Ecology Lab, Hochschule Kaiserslautern</p>
+            <blockquote style="margin: 0"><p lang="en" style="font-weight: 500; font-size: 20px; line-height: 1.25">“My research focuses on cyanobacteria, green algae and lichens from the most extreme environments on our planet - both poles, the Atacama Desert and caves.”</p></blockquote>
+            <p class="t-small">Auf selectedplants.de</p>
+          </div>
+        </aside>
+      </div>
+      <p class="credits"><strong>Team</strong> [Namen der Gruppe] · <strong>Betreuung</strong> [Lehrende] · <strong>Forschung und Inhalte</strong> Dr. Patrick Jung, XCEL Lab</p>
+    </div>
+  </section>
+
+  <nav class="wrap pager" aria-label="Weitere Erlebnisse">
+    <a class="cta" href="kaelte-als-zuhause.html" rel="prev"><span aria-hidden="true">←</span> <span class="sr-only">Vorheriges Erlebnis: </span>Kälte als Zuhause</a>
+    <a class="cta" href="experience.html" rel="next"><span class="sr-only">Nächstes Erlebnis: </span>Leben aus Nebel <span aria-hidden="true">→</span></a>
+  </nav>
+</main>
+
+<footer class="footer" style="margin-top: 0">
+  <div class="wrap footer-inner">
+    <ul class="partners" aria-label="Beteiligte Hochschulen">
+      <li class="logo-ph">HS KL Logo weiß<br>(offizielle Datei)</li>
+      <li class="logo-ph">[Partner-Hochschule]<br>Logo folgt</li>
+      <li class="logo-ph">[Partner-Hochschule]<br>Logo folgt</li>
+      <li class="logo-ph">[Partner-Hochschule]<br>Logo folgt</li>
+    </ul>
+    <div class="stack footer-text">
+      <p style="font-size: 16px">Ein Projekt im Studiengang Virtual Design, Hochschule Kaiserslautern. Teil von Heritomics.</p>
+      <p class="t-small">Forschungsinhalte, Zitate und Fotos: Dr. Patrick Jung, XCEL Lab. <a href="https://www.selectedplants.de/">selectedplants.de <span aria-hidden="true">↗</span><span class="sr-only"> (externe Seite)</span></a> · <a href="https://www.instagram.com/selectedplants/">@selectedplants <span aria-hidden="true">↗</span><span class="sr-only"> (externe Seite)</span></a></p>
+    </div>
+    <nav class="footer-legal" aria-label="Rechtliches">
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+    </nav>
+  </div>
+</footer>
+
+<aside class="mock-tools" aria-label="Mockup-Werkzeug">
+  <label>Schrift
+    <select id="font-mode">
+      <option value="fallback">Fallback (Poppins)</option>
+      <option value="preview">Brand-Vorschau (Stratos-Ersatz)</option>
+      <option value="brand">Marke: Stratos/Matter (nur lokal)</option>
+    </select>
+  </label>
+  <label>Projektfarbe
+    <select id="key-color">
+      <option value="s-green">Grün</option>
+      <option value="s-blue">Blau</option>
+      <option value="s-yellow" selected>Gelb</option>
+    </select>
+  </label>
+</aside>
+
+<script src="mockup.js"></script>
+</body>
+</html>

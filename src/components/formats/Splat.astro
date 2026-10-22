@@ -1,0 +1,39 @@
+---
+// Format "splat": a Gaussian splat (3D scan made of many soft points). Contract: src/scripts/stage-types.ts.
+// The JSON config goes to src/scripts/formats/splat.ts on Start; the <template> is copied in then.
+import { t } from '../../i18n/ui';
+import { asset, type Lang } from '../../i18n/routes';
+import { embedText, type LocalProject } from '../../lib/projects';
+
+interface Props { project: LocalProject; lang: Lang }
+const { project, lang } = Astro.props;
+const d = project.entry.data;
+if (d.format !== 'splat') throw new Error('Splat.astro used for a non-splat project');
+const description = embedText(project, lang, 'description', d.embed.description)!;
+const config = {
+  src: d.embed.src ? asset(d.embed.src) : undefined,
+  procedural: d.embed.procedural,
+  label: description.text,
+};
+---
+<script is:inline type="application/json" data-stage-config set:html={JSON.stringify(config)} />
+<template data-stage-template>
+  <div class="splat">
+    <div class="splat-canvas" data-splat-canvas></div>
+    <div class="splat-bar">
+      {d.embed.placeholder && <span class="chip-o">{t(lang, 'placeholder')}</span>}
+      <p class="t-small">{t(lang, 'splat.help')}</p>
+      <button class="btn-o" type="button" data-splat-reset>{t(lang, 'model.reset')}</button>
+    </div>
+  </div>
+</template>
+<p class="t-small splat-description" lang={description.lang !== lang ? description.lang : undefined}>{description.text}</p>
+
+<style is:global>
+  [data-stage][data-format="splat"] .splat { position: absolute; inset: 0; display: flex; flex-direction: column; }
+  [data-stage][data-format="splat"] .splat-canvas { position: relative; flex: 1; min-height: 0; }
+  [data-stage][data-format="splat"] .splat-canvas canvas { display: block; width: 100%; height: 100%; }
+  [data-stage][data-format="splat"] .splat-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); padding: var(--space-2) var(--space-3); border-top: var(--rule-width) solid var(--color-white); }
+  [data-stage][data-format="splat"] .splat-bar .t-small { flex: 1; min-width: 12em; }
+  .splat-description { margin-top: var(--space-3); max-width: var(--measure); }
+</style>

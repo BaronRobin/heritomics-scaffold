@@ -1,0 +1,9 @@
+---
+// German home page: the content lives in src/views/Home.astro (shared with /en/).
+import Base from '../../layouts/Base.astro';
+import Home from '../../views/Home.astro';
+import { t } from '../../i18n/ui';
+---
+<Base lang="de" routeKey="home" description={t('de', 'home.lead')}>
+  <Home lang="de" />
+</Base>

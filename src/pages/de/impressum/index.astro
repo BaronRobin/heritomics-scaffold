@@ -1,0 +1,9 @@
+---
+// Impressum (placeholder for the official HS KL text). Content: src/views/Imprint.astro
+import Base from '../../../layouts/Base.astro';
+import Imprint from '../../../views/Imprint.astro';
+import { t } from '../../../i18n/ui';
+---
+<Base lang="de" routeKey="imprint" title={t('de', 'footer.imprint')}>
+  <Imprint lang="de" />
+</Base>

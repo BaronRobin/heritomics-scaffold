@@ -1,0 +1,83 @@
+---
+// Format "model3d": a GLB model the visitor can rotate and zoom (src/scripts/formats/model3d.ts).
+// Contract, see src/scripts/stage-types.ts:
+// - the JSON below is passed to model3d.ts as ctx.config when the visitor clicks Start;
+// - the <template> is copied into the Stage on start, so nothing in it loads before the click.
+// The canvas gets role="img", a name (format + title) and, as its description, the placeholder label
+// (if any), the project's embed.description and the help line.
+import { t } from '../../i18n/ui';
+import { asset, type Lang } from '../../i18n/routes';
+import { embedText, type LocalProject } from '../../lib/projects';
+
+interface Props { project: LocalProject; lang: Lang }
+const { project, lang } = Astro.props;
+const d = project.entry.data;
+if (d.format !== 'model3d') throw new Error(`Model3D.astro needs format "model3d", got "${d.format}"`);
+
+const description = embedText(project, lang, 'description', d.embed.description)!;
+const title = project.stage?.title ?? project.title;
+const id = `m3d-${project.slug}`;
+const config = { src: asset(d.embed.src) };
+const otherLang = (l: Lang) => (l !== lang ? l : undefined);
+---
+<script is:inline type="application/json" data-stage-config set:html={JSON.stringify(config)} />
+<template data-stage-template>
+  <div class="m3d" data-m3d>
+    <div class="m3d-view" data-m3d-view data-label={`${t(lang, 'format.model3d')}: ${title.text}`}>
+      <p class="chip-o m3d-badge" id={`${id}-placeholder`} data-m3d-placeholder hidden={!d.embed.placeholder}>{t(lang, 'placeholder')}</p>
+    </div>
+    <div class="m3d-bar">
+      <button class="btn-o m3d-reset" type="button" data-m3d-reset hidden>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.7M4 4v5h5" /></svg>
+        <span class="m3d-reset-text">{t(lang, 'model.reset')}</span>
+      </button>
+      <p class="t-small m3d-help" id={`${id}-help`} data-m3d-help>{t(lang, 'model.help')}</p>
+    </div>
+    <p id={`${id}-desc`} data-m3d-desc lang={otherLang(description.lang)} hidden>{description.text}</p>
+  </div>
+</template>
+
+<style is:global>
+  [data-stage][data-format="model3d"] .m3d {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    background: var(--stage-bg); color: var(--stage-text); container: m3d / inline-size;
+  }
+  [data-stage][data-format="model3d"] .m3d-view { position: relative; flex: 1 1 auto; min-height: 0; background: var(--stage-bg); }
+  [data-stage][data-format="model3d"] .m3d-view canvas { cursor: grab; }
+  [data-stage][data-format="model3d"] .m3d-view canvas:active { cursor: grabbing; }
+  /* Focus ring inside the canvas, so it stays visible in fullscreen */
+  [data-stage][data-format="model3d"] .m3d-view canvas:focus-visible { outline-offset: calc(var(--focus-width) * -1); box-shadow: none; }
+  [data-stage][data-format="model3d"] .m3d-badge {
+    position: absolute; top: var(--space-3); left: var(--space-3); z-index: 1; margin: 0;
+    background: var(--stage-bg); pointer-events: none;
+  }
+  [data-stage][data-format="model3d"] .m3d-bar {
+    flex: none; display: flex; align-items: center; gap: var(--space-2) var(--space-4);
+    padding: var(--space-2) var(--space-3); border-top: var(--rule-width) solid var(--stage-text);
+  }
+  [data-stage][data-format="model3d"] .m3d-reset { flex: none; }
+  [data-stage][data-format="model3d"] .m3d-help { flex: 1 1 auto; min-width: 0; margin: 0; }
+
+  /* Narrow Stage (phones): the model gets the whole box. The reset button floats over its lower left
+     corner and shows only its icon (its name stays). The help line, which the canvas also announces as
+     its description, appears next to it while the canvas has keyboard focus. In fullscreen the box is
+     wide again and everything is shown as above. */
+  @container m3d (max-width: 32rem) {
+    [data-stage][data-format="model3d"] .m3d-bar {
+      position: absolute; inset: auto 0 0; z-index: 1; align-items: flex-end;
+      padding: var(--space-3); border: 0; pointer-events: none;
+    }
+    [data-stage][data-format="model3d"] .m3d-bar > * { pointer-events: auto; }
+    [data-stage][data-format="model3d"] .m3d-reset { padding-inline: var(--space-3); background: var(--stage-bg); }
+    [data-stage][data-format="model3d"] .m3d-reset:hover { background: var(--stage-text); }
+    [data-stage][data-format="model3d"] .m3d-reset-text,
+    [data-stage][data-format="model3d"] .m3d:not(:has(canvas:focus-visible)) .m3d-help {
+      position: absolute; width: var(--rule-width); height: var(--rule-width); margin: calc(var(--rule-width) * -1);
+      padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+    }
+    [data-stage][data-format="model3d"] .m3d-help {
+      background: var(--stage-bg); padding: var(--space-2) var(--space-3);
+      border: var(--rule-width) solid var(--stage-text);
+    }
+  }
+</style>
